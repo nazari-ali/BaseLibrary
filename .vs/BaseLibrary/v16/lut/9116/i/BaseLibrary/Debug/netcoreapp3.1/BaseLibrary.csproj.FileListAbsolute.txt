@@ -1,0 +1,7 @@
+C:\Users\Ali\source\repos\BaseLibrary\.vs\BaseLibrary\v16\lut\0\b\BaseLibrary\Debug\netcoreapp3.1\BaseLibrary.deps.json
+C:\Users\Ali\source\repos\BaseLibrary\.vs\BaseLibrary\v16\lut\0\b\BaseLibrary\Debug\netcoreapp3.1\BaseLibrary.dll
+C:\Users\Ali\source\repos\BaseLibrary\.vs\BaseLibrary\v16\lut\0\i\BaseLibrary\Debug\netcoreapp3.1\BaseLibrary.csprojAssemblyReference.cache
+C:\Users\Ali\source\repos\BaseLibrary\.vs\BaseLibrary\v16\lut\0\i\BaseLibrary\Debug\netcoreapp3.1\BaseLibrary.AssemblyInfoInputs.cache
+C:\Users\Ali\source\repos\BaseLibrary\.vs\BaseLibrary\v16\lut\0\i\BaseLibrary\Debug\netcoreapp3.1\BaseLibrary.AssemblyInfo.cs
+C:\Users\Ali\source\repos\BaseLibrary\.vs\BaseLibrary\v16\lut\0\i\BaseLibrary\Debug\netcoreapp3.1\BaseLibrary.csproj.CopyComplete
+C:\Users\Ali\source\repos\BaseLibrary\.vs\BaseLibrary\v16\lut\0\i\BaseLibrary\Debug\netcoreapp3.1\BaseLibrary.dll

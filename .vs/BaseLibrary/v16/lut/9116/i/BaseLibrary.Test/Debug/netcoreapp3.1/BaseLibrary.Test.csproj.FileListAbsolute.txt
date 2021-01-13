@@ -1,0 +1,14 @@
+C:\Users\Ali\source\repos\BaseLibrary\.vs\BaseLibrary\v16\lut\0\b\BaseLibrary.Test\Debug\netcoreapp3.1\NUnit3.TestAdapter.dll
+C:\Users\Ali\source\repos\BaseLibrary\.vs\BaseLibrary\v16\lut\0\b\BaseLibrary.Test\Debug\netcoreapp3.1\NUnit3.TestAdapter.pdb
+C:\Users\Ali\source\repos\BaseLibrary\.vs\BaseLibrary\v16\lut\0\b\BaseLibrary.Test\Debug\netcoreapp3.1\nunit.engine.dll
+C:\Users\Ali\source\repos\BaseLibrary\.vs\BaseLibrary\v16\lut\0\b\BaseLibrary.Test\Debug\netcoreapp3.1\nunit.engine.api.dll
+C:\Users\Ali\source\repos\BaseLibrary\.vs\BaseLibrary\v16\lut\0\b\BaseLibrary.Test\Debug\netcoreapp3.1\BaseLibrary.Test.deps.json
+C:\Users\Ali\source\repos\BaseLibrary\.vs\BaseLibrary\v16\lut\0\b\BaseLibrary.Test\Debug\netcoreapp3.1\BaseLibrary.Test.runtimeconfig.json
+C:\Users\Ali\source\repos\BaseLibrary\.vs\BaseLibrary\v16\lut\0\b\BaseLibrary.Test\Debug\netcoreapp3.1\BaseLibrary.Test.runtimeconfig.dev.json
+C:\Users\Ali\source\repos\BaseLibrary\.vs\BaseLibrary\v16\lut\0\b\BaseLibrary.Test\Debug\netcoreapp3.1\BaseLibrary.Test.dll
+C:\Users\Ali\source\repos\BaseLibrary\.vs\BaseLibrary\v16\lut\0\i\BaseLibrary.Test\Debug\netcoreapp3.1\BaseLibrary.Test.csprojAssemblyReference.cache
+C:\Users\Ali\source\repos\BaseLibrary\.vs\BaseLibrary\v16\lut\0\i\BaseLibrary.Test\Debug\netcoreapp3.1\BaseLibrary.Test.AssemblyInfoInputs.cache
+C:\Users\Ali\source\repos\BaseLibrary\.vs\BaseLibrary\v16\lut\0\i\BaseLibrary.Test\Debug\netcoreapp3.1\BaseLibrary.Test.AssemblyInfo.cs
+C:\Users\Ali\source\repos\BaseLibrary\.vs\BaseLibrary\v16\lut\0\i\BaseLibrary.Test\Debug\netcoreapp3.1\BaseLibrary.Test.csproj.CopyComplete
+C:\Users\Ali\source\repos\BaseLibrary\.vs\BaseLibrary\v16\lut\0\i\BaseLibrary.Test\Debug\netcoreapp3.1\BaseLibrary.Test.dll
+C:\Users\Ali\source\repos\BaseLibrary\.vs\BaseLibrary\v16\lut\0\i\BaseLibrary.Test\Debug\netcoreapp3.1\BaseLibrary.Test.genruntimeconfig.cache

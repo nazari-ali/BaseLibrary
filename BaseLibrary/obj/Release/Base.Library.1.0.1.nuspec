@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Base.Library</id>
+    <version>1.0.1</version>
+    <authors>Ali Nazari</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
+    <description>this library include extensions and pattern repository and unit of work and initialize dbcontext for sql, mySql and initialize for MongoDB</description>
+    <tags>Extension, Utilities, Repository, UnitOfWork, DbContext, MongoDB, Generic</tags>
+    <dependencies>
+      <group targetFramework=".NETCoreApp3.1">
+        <dependency id="MediaTypeMap.Core" version="2.3.3" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.AspNetCore.Http.Features" version="5.0.1" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.AspNetCore.Identity.EntityFrameworkCore" version="5.0.1" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.EntityFrameworkCore" version="5.0.1" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.EntityFrameworkCore.Relational" version="5.0.1" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.EntityFrameworkCore.SqlServer" version="5.0.1" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Configuration" version="5.0.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Options.ConfigurationExtensions" version="5.0.0" exclude="Build,Analyzers" />
+        <dependency id="MongoDB.Driver" version="2.11.5" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="12.0.3" exclude="Build,Analyzers" />
+        <dependency id="Pluralize.NET" version="1.0.2" exclude="Build,Analyzers" />
+        <dependency id="Pomelo.EntityFrameworkCore.MySql" version="3.2.4" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="C:\Users\Ali\source\repos\BaseLibrary\BaseLibrary\bin\Release\netcoreapp3.1\BaseLibrary.dll" target="lib\netcoreapp3.1\BaseLibrary.dll" />
+  </files>
+</package>
