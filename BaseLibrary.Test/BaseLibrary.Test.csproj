@@ -20,9 +20,4 @@
     <ProjectReference Include="..\BaseLibrary\BaseLibrary.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Initializations\" />
-    <Folder Include="MongoDB\" />
-  </ItemGroup>
-
 </Project>

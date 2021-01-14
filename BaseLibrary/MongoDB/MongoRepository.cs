@@ -21,7 +21,7 @@ namespace BaseLibrary.MongoDB
         {
             Collection = mongoContext.GetCollection<TDocument>();
 
-            var bucketSettings = mongoContext.BucketSettings;
+            var bucketSettings = mongoContext.GridFsSettings;
 
             Bucket = new GridFSBucket(mongoContext.Database, new GridFSBucketOptions
             {

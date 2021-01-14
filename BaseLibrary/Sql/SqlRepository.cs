@@ -13,9 +13,9 @@ namespace BaseLibrary.Sql
         where TEntity : class
     {
         protected DbSet<TEntity> Entities;
+        protected IQueryable<TEntity> Table => Entities;
+        protected IQueryable<TEntity> TableNoTracking => Entities.AsNoTracking();
         private readonly DbContext _dbContext;
-        public IQueryable<TEntity> Table => Entities;
-        public IQueryable<TEntity> TableNoTracking => Entities.AsNoTracking();
 
         public SqlRepository(DbContext dbContext)
         {

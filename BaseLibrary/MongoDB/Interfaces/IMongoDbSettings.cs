@@ -1,10 +1,14 @@
-﻿namespace BaseLibrary.MongoDB.Interfaces
+﻿using BaseLibrary.Models.MongoDB;
+using MongoDB.Driver;
+
+namespace BaseLibrary.MongoDB.Interfaces
 {
     public interface IMongoDbSettings
     {
+        ConnectionType ConnectionType { get; set; }
         string ConnectionString { get; set; }
         string DatabaseName { get; set; }
-        string BucketName { get; set; }
-        int BucketSize { get; set; }
+        MongoClientSettings MongoClientSettings { get; set; }
+        GridFsSettings GridFsSettings { get; set; }
     }
 }

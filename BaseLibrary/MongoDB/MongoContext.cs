@@ -1,6 +1,13 @@
-﻿using BaseLibrary.Models.MongoDB;
+﻿using BaseLibrary.Extensions;
+using BaseLibrary.Models.MongoDB;
+using BaseLibrary.MongoDB.Connection;
+using BaseLibrary.MongoDB.Extensions;
 using BaseLibrary.MongoDB.Interfaces;
 using MongoDB.Driver;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace BaseLibrary.MongoDB
@@ -10,10 +17,14 @@ namespace BaseLibrary.MongoDB
     ///     Add To appsettings.json
     ///     
     ///         "MongoDbSettings": {
+    ///             "ConnectionType": ConnectionType.Tcp,
     ///             "ConnectionString": "mongodb://localhost:32772",
     ///             "DatabaseName": "ExampleDatabase",
-    ///             "BucketName": "fs",
-    ///             "BucketSize": 262144
+    ///             "MongoClientSettings": { },
+    ///             "GridFsSetting": {
+    ///                 "BucketName": "fs",
+    ///                 "BucketSize": 262144
+    ///             }
     ///         }
     /// 
     /// </summary>
@@ -21,24 +32,22 @@ namespace BaseLibrary.MongoDB
     {
         private readonly IMongoClient _mongoDbClient;
         private readonly IMongoDatabase _database;
-        private readonly BucketSetting _bucketSetting;
+        private readonly GridFsSettings _gridFsSetting;
 
         public IMongoClient MongoClient => _mongoDbClient;
         public IMongoDatabase Database => _database;
-        public BucketSetting BucketSettings => _bucketSetting;
+        public GridFsSettings GridFsSettings => _gridFsSetting;
 
         public MongoContext(IMongoDbSettings settings)
         {
-            _mongoDbClient = new MongoClient(settings.ConnectionString);
+            var mongoConnections = ReflectionExtensions.GetTypesAssignableFrom(typeof(IMongoConnection)).Cast<IMongoConnection>();
+
+            _mongoDbClient = mongoConnections.Single(c => c.Type == settings.ConnectionType).GetMongoClient(settings);
 
             _database = _mongoDbClient.GetDatabase(settings.DatabaseName);
 
             // bucket settings for gridFS
-            _bucketSetting = new BucketSetting
-            {
-                BucketName = settings.BucketName,
-                BucketSize = settings.BucketSize
-            };
+            _gridFsSetting = settings.GridFsSettings;
         }
 
         /// <summary>

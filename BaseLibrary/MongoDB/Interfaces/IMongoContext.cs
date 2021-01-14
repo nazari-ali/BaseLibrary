@@ -8,7 +8,7 @@ namespace BaseLibrary.MongoDB.Interfaces
     {
         IMongoClient MongoClient { get; }
         IMongoDatabase Database { get; }
-        BucketSetting BucketSettings { get; }
+        GridFsSettings GridFsSettings { get; }
 
         IMongoCollection<TDocument> GetCollection<TDocument>(string name = null);
     }
