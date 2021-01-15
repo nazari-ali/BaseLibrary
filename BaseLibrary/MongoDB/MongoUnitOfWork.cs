@@ -30,8 +30,21 @@ namespace BaseLibrary.MongoDB
         /// <returns></returns>
         public bool SaveChangesTransaction()
         {
+            bool returnValue = true;
+            MongoContext.Session.StartTransaction();
 
-            return MongoContext.SaveChangesTransaction();
+            try
+            {
+                SaveChanges();
+                MongoContext.Session.CommitTransaction();
+            }
+            catch (Exception)
+            {
+                returnValue = false;
+                MongoContext.Session.AbortTransaction();
+            }
+
+            return returnValue;
         }
 
         /// <summary>
@@ -39,9 +52,23 @@ namespace BaseLibrary.MongoDB
         /// for all command
         /// </summary>
         /// <returns></returns>
-        public Task<bool> SaveChangesTransactionAsync()
+        public async Task<bool> SaveChangesTransactionAsync()
         {
-            return MongoContext.SaveChangesTransactionAsync();
+            bool returnValue = true;
+            MongoContext.Session.StartTransaction();
+
+            try
+            {
+                SaveChanges();
+                await MongoContext.Session.CommitTransactionAsync();
+            }
+            catch (Exception)
+            {
+                returnValue = false;
+                await MongoContext.Session.AbortTransactionAsync();
+            }
+
+            return returnValue;
         }
 
         #region IDisposable Support  

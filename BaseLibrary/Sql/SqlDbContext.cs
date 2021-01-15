@@ -37,7 +37,7 @@ namespace BaseLibrary.Sql
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.RegisterAllEntities<ISqlEntity>(_assemblies);
+            modelBuilder.RegisterAllEntitiesWithoutInheritFromInterface<ISqlEntity>(_assemblies);
             modelBuilder.RegisterEntityTypeConfiguration(_assemblies);
             modelBuilder.AddRestrictDeleteBehaviorConvention();
             modelBuilder.AddSequentialGuidForIdConvention();

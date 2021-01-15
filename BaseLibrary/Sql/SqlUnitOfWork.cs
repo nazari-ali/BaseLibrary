@@ -9,12 +9,12 @@ namespace BaseLibrary.Sql
 {
     public class SqlUnitOfWork : ISqlUnitOfWork
     {
-        protected readonly DbContext Context;
+        protected readonly SqlDbContext Context;
         private readonly Dictionary<Type, object> _repositories;
 
         public SqlUnitOfWork(DbContext dbContext)
         {
-            Context = dbContext;
+            Context = (SqlDbContext)dbContext;
             _repositories = new Dictionary<Type, object>();
         }
 
@@ -31,9 +31,9 @@ namespace BaseLibrary.Sql
         /// SaveChanges
         /// </summary>
         /// <returns></returns>
-        public async Task SaveChangesAsync()
+        public Task SaveChangesAsync()
         {
-            await Context.SaveChangesAsync();
+            return Context.SaveChangesAsync();
         }
 
         /// <summary>

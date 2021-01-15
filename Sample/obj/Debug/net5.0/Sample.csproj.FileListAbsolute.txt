@@ -82,3 +82,7 @@ C:\Users\Ali\source\repos\BaseLibrary\Sample\obj\Debug\net5.0\Sample.dll
 C:\Users\Ali\source\repos\BaseLibrary\Sample\obj\Debug\net5.0\ref\Sample.dll
 C:\Users\Ali\source\repos\BaseLibrary\Sample\obj\Debug\net5.0\Sample.pdb
 C:\Users\Ali\source\repos\BaseLibrary\Sample\obj\Debug\net5.0\Sample.genruntimeconfig.cache
+C:\Users\Ali\source\repos\BaseLibrary\Sample\bin\Debug\net5.0\Bogus.dll
+C:\Users\Ali\source\repos\BaseLibrary\Sample\bin\Debug\net5.0\Humanizer.dll
+C:\Users\Ali\source\repos\BaseLibrary\Sample\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Design.dll
+C:\Users\Ali\source\repos\BaseLibrary\Sample\bin\Debug\net5.0\System.Diagnostics.DiagnosticSource.dll

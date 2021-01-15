@@ -29,6 +29,24 @@ namespace BaseLibrary.Extensions
         }
 
         /// <summary>
+        /// Dynamicaly register all Entities that inherit from specific BaseType then not inherit from interface
+        /// </summary>
+        /// <param name="modelBuilder"></param>
+        /// <param name="baseType">Base type that Entities inherit from this</param>
+        /// <param name="assemblies">Assemblies contains Entities</param>
+        public static void RegisterAllEntitiesWithoutInheritFromInterface<BaseType>(
+            this ModelBuilder modelBuilder,
+            params Assembly[] assemblies
+        )
+        {
+            IEnumerable<Type> types = assemblies.SelectMany(a => a.GetExportedTypes())
+                .Where(c => c.IsClass && !c.IsAbstract && c.IsPublic && !c.GetInterfaces().Any() && typeof(BaseType).IsAssignableFrom(c));
+
+            foreach (Type type in types)
+                modelBuilder.Entity(type);
+        }
+
+        /// <summary>
         /// Dynamicaly load all IEntityTypeConfiguration with Reflection
         /// </summary>
         /// <param name="modelBuilder"></param>

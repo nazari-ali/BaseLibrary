@@ -14,7 +14,5 @@ namespace BaseLibrary.MongoDB.Interfaces
         IMongoCollection<TDocument> GetCollection<TDocument>(string name = null);
         Task AddCommand(Action func);
         int SaveChanges();
-        bool SaveChangesTransaction();
-        Task<bool> SaveChangesTransactionAsync();
     }
 }

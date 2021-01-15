@@ -88,54 +88,6 @@ namespace BaseLibrary.MongoDB
         }
 
         /// <summary>
-        /// SaveChanges Transaction
-        /// for all command
-        /// </summary>
-        /// <returns></returns>
-        public bool SaveChangesTransaction()
-        {
-            bool returnValue = true;
-            _session.StartTransaction();
-
-            try
-            {
-                SaveChanges();
-                _session.CommitTransaction();
-            }
-            catch (Exception)
-            {
-                returnValue = false;
-                _session.AbortTransaction();
-            }
-
-            return returnValue;
-        }
-
-        /// <summary>
-        /// SaveChanges Transaction
-        /// for all command
-        /// </summary>
-        /// <returns></returns>
-        public async Task<bool> SaveChangesTransactionAsync()
-        {
-            bool returnValue = true;
-            _session.StartTransaction();
-
-            try
-            {
-                SaveChanges();
-                await _session.CommitTransactionAsync();
-            }
-            catch (Exception)
-            {
-                returnValue = false;
-                await _session.AbortTransactionAsync();
-            }
-
-            return returnValue;
-        }
-
-        /// <summary>
         /// Dispose session, clear commands
         /// </summary>
         public void Dispose()

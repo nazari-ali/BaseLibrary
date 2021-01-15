@@ -3,12 +3,8 @@ using BaseLibrary.MongoDB.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Sample.Extensions
+namespace Sample.Mongo.Extensions
 {
     public static class ServiceCollectionExtensions
     {
