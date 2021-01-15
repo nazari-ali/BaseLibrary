@@ -8,7 +8,7 @@
     ".NETCoreApp,Version=v3.1": {
       "BaseLibrary.Test/1.0.0": {
         "dependencies": {
-          "Base.Library": "1.0.6",
+          "Base.Library": "1.0.9",
           "Microsoft.EntityFrameworkCore": "5.0.1",
           "Microsoft.EntityFrameworkCore.InMemory": "5.0.1",
           "Microsoft.NET.Test.Sdk": "16.5.0",
@@ -1764,7 +1764,7 @@
           }
         }
       },
-      "Base.Library/1.0.6": {
+      "Base.Library/1.0.9": {
         "dependencies": {
           "MediaTypeMap.Core": "2.3.3",
           "Microsoft.AspNetCore.Http.Features": "5.0.1",
@@ -2765,7 +2765,7 @@
       "path": "system.xml.xpath.xmldocument/4.3.0",
       "hashPath": "system.xml.xpath.xmldocument.4.3.0.nupkg.sha512"
     },
-    "Base.Library/1.0.6": {
+    "Base.Library/1.0.9": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

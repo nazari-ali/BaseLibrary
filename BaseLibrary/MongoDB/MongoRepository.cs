@@ -16,6 +16,8 @@ namespace BaseLibrary.MongoDB
     {
         protected readonly IGridFSBucket Bucket;
         protected readonly IMongoCollection<TDocument> Collection;
+        private readonly IClientSessionHandle _session;
+        private readonly IMongoContext _mongoContext;
 
         public MongoRepository(IMongoContext mongoContext)
         {
@@ -30,6 +32,9 @@ namespace BaseLibrary.MongoDB
                 WriteConcern = WriteConcern.WMajority,
                 ReadPreference = ReadPreference.Primary
             });
+
+            _mongoContext = mongoContext;
+            _session = mongoContext.Session;
         }
 
         #region IRepositorySynchronously
@@ -74,14 +79,18 @@ namespace BaseLibrary.MongoDB
             TDocument document
         )
         {
-            Collection.InsertOne(document);
+            _mongoContext.AddCommand(() =>
+                Collection.InsertOne(_session, document)
+            );
         }
 
         public void InsertMany(
             ICollection<TDocument> documents
         )
         {
-            Collection.InsertMany(documents);
+            _mongoContext.AddCommand(() =>
+                Collection.InsertMany(_session, documents)
+            );
         }
 
         public void ReplaceOne(
@@ -89,14 +98,19 @@ namespace BaseLibrary.MongoDB
         )
         {
             var filter = Builders<TDocument>.Filter.Eq(doc => doc.Id, document.Id);
-            Collection.FindOneAndReplace(filter, document);
+
+            _mongoContext.AddCommand(() =>
+                Collection.FindOneAndReplace(_session, filter, document)
+            );
         }
 
         public void DeleteOne(
             Expression<Func<TDocument, bool>> filterExpression
         )
         {
-            Collection.FindOneAndDelete(filterExpression);
+            _mongoContext.AddCommand(() =>
+                Collection.FindOneAndDelete(_session, filterExpression)
+            );
         }
 
         public void DeleteById(
@@ -105,14 +119,19 @@ namespace BaseLibrary.MongoDB
         {
             var objectId = new ObjectId(id);
             var filter = Builders<TDocument>.Filter.Eq(doc => doc.Id, objectId);
-            Collection.FindOneAndDelete(filter);
+
+            _mongoContext.AddCommand(() =>
+                Collection.FindOneAndDelete(_session, filter)
+            );
         }
 
         public void DeleteMany(
             Expression<Func<TDocument, bool>> filterExpression
         )
         {
-            Collection.DeleteMany(filterExpression);
+            _mongoContext.AddCommand(() =>
+                Collection.DeleteMany(_session, filterExpression)
+            );;
         }
 
         #endregion
@@ -146,24 +165,31 @@ namespace BaseLibrary.MongoDB
             CancellationToken cancellationToken = default
         )
         {
-            return Task.Run(() => Collection.InsertOneAsync(document, null, cancellationToken));
+            return _mongoContext.AddCommand(() =>
+                Collection.InsertOneAsync(_session, document, null, cancellationToken)
+            );
         }
 
-        public virtual async Task InsertManyAsync(
+        public virtual Task InsertManyAsync(
             ICollection<TDocument> documents,
             CancellationToken cancellationToken = default
         )
         {
-            await Collection.InsertManyAsync(documents, null, cancellationToken);
+            return _mongoContext.AddCommand(() =>
+                Collection.InsertManyAsync(_session, documents, null, cancellationToken)
+            );
         }
 
-        public virtual async Task ReplaceOneAsync(
+        public virtual Task ReplaceOneAsync(
             TDocument document,
             CancellationToken cancellationToken = default
         )
         {
             var filter = Builders<TDocument>.Filter.Eq(doc => doc.Id, document.Id);
-            await Collection.FindOneAndReplaceAsync(filter, document, null, cancellationToken);
+
+            return _mongoContext.AddCommand(() =>
+                Collection.FindOneAndReplaceAsync(_session, filter, document, null, cancellationToken)
+            );
         }
 
         public Task DeleteOneAsync(
@@ -171,7 +197,9 @@ namespace BaseLibrary.MongoDB
             CancellationToken cancellationToken = default
         )
         {
-            return Task.Run(() => Collection.FindOneAndDeleteAsync(filterExpression, null, cancellationToken));
+            return _mongoContext.AddCommand(() =>
+                Collection.FindOneAndDeleteAsync(_session, filterExpression, null, cancellationToken)
+            );
         }
 
         public Task DeleteByIdAsync(
@@ -179,12 +207,12 @@ namespace BaseLibrary.MongoDB
             CancellationToken cancellationToken = default
         )
         {
-            return Task.Run(() =>
-            {
-                var objectId = new ObjectId(id);
-                var filter = Builders<TDocument>.Filter.Eq(doc => doc.Id, objectId);
-                Collection.FindOneAndDeleteAsync(filter, null, cancellationToken);
-            });
+            var objectId = new ObjectId(id);
+            var filter = Builders<TDocument>.Filter.Eq(doc => doc.Id, objectId);
+
+            return _mongoContext.AddCommand(() =>
+                Collection.FindOneAndDeleteAsync(_session, filter, null, cancellationToken)
+            );
         }
 
         public Task DeleteManyAsync(
@@ -192,7 +220,9 @@ namespace BaseLibrary.MongoDB
             CancellationToken cancellationToken = default
         )
         {
-            return Task.Run(() => Collection.DeleteManyAsync(filterExpression, cancellationToken));
+            return _mongoContext.AddCommand(() =>
+                Collection.DeleteManyAsync(_session, filterExpression, null, cancellationToken)
+            );
         }
 
         #endregion

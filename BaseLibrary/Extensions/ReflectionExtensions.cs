@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BaseLibrary.MongoDB.Interfaces;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -133,6 +134,33 @@ namespace BaseLibrary.Extensions
         )
         {
             return !type.IsValueType && !type.IsPrimitive && type.Namespace != null && !type.Namespace.StartsWith("System", StringComparison.Ordinal);
+        }
+
+        public static IEnumerable<T> InstantiateClass<T>(
+            params Assembly[] assemblies
+        )
+        {
+            IEnumerable<Type> types;
+
+            if (!assemblies.Any())
+            {
+                types = typeof(T).GetTypesAssignableFrom(typeof(T).Assembly);
+            }
+            else
+            {
+                types = typeof(T).GetTypesAssignableFrom(assemblies);
+            }
+
+            types = types.Where(c => c.IsClass && !c.IsAbstract && c.IsPublic).Select(p => p);
+
+            List<T> result = new List<T>();
+
+            foreach (Type type in types)
+            {
+                result.Add((T)Activator.CreateInstance(type));
+            }
+
+            return result;
         }
     }
 }

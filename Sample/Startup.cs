@@ -1,3 +1,5 @@
+using BaseLibrary.MongoDB;
+using BaseLibrary.MongoDB.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -7,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Sample.Extensions;
+using Sample.Mongo.UnitOfWork;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +36,10 @@ namespace Sample
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Sample", Version = "v1" });
             });
+
+            services.AddMongoDbSettings(Configuration.GetSection("MongoDbSettings"));
+            services.AddSingleton<IMongoContext, MongoContext>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

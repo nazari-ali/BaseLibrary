@@ -122,6 +122,7 @@ namespace BaseLibrary.Sql
             if (disposing)
             {
                 //dispose managed state (managed objects).  
+                Context.Dispose();
             }
 
             // free unmanaged resources (unmanaged objects) and override a finalizer below.  

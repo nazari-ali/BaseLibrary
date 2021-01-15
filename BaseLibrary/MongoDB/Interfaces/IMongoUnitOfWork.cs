@@ -6,7 +6,8 @@ namespace BaseLibrary.MongoDB.Interfaces
 {
     public interface IMongoUnitOfWork : IDisposable
     {
-        IClientSessionHandle Session { get; }
-        Task<IClientSessionHandle> SessionAsync { get; }
+        void SaveChanges();
+        bool SaveChangesTransaction();
+        Task<bool> SaveChangesTransactionAsync();
     }
 }

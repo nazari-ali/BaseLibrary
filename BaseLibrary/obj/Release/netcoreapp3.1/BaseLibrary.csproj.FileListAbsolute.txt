@@ -6,3 +6,4 @@ C:\Users\Ali\source\repos\BaseLibrary\BaseLibrary\obj\Release\netcoreapp3.1\Base
 C:\Users\Ali\source\repos\BaseLibrary\BaseLibrary\obj\Release\netcoreapp3.1\BaseLibrary.csproj.CoreCompileInputs.cache
 C:\Users\Ali\source\repos\BaseLibrary\BaseLibrary\obj\Release\netcoreapp3.1\BaseLibrary.dll
 C:\Users\Ali\source\repos\BaseLibrary\BaseLibrary\obj\Release\netcoreapp3.1\BaseLibrary.pdb
+C:\Users\Ali\source\repos\BaseLibrary\BaseLibrary\obj\Release\netcoreapp3.1\BaseLibrary.csprojAssemblyReference.cache

@@ -7,15 +7,42 @@ namespace BaseLibrary.MongoDB
 {
     public class MongoUnitOfWork : IMongoUnitOfWork
     {
-        private readonly IMongoContext mongoContext;
+        protected readonly IMongoContext MongoContext;
 
         public MongoUnitOfWork(IMongoContext mongoContext)
         {
-            this.mongoContext = mongoContext;
+            MongoContext = mongoContext;
         }
 
-        public virtual IClientSessionHandle Session => mongoContext.MongoClient.StartSession();
-        public virtual Task<IClientSessionHandle> SessionAsync => mongoContext.MongoClient.StartSessionAsync();
+        /// <summary>
+        /// SaveChanges
+        /// </summary>
+        /// <returns></returns>
+        public void SaveChanges()
+        {
+            MongoContext.SaveChanges();
+        }
+
+        /// <summary>
+        /// SaveChanges Transaction
+        /// for all command
+        /// </summary>
+        /// <returns></returns>
+        public bool SaveChangesTransaction()
+        {
+
+            return MongoContext.SaveChangesTransaction();
+        }
+
+        /// <summary>
+        /// SaveChanges Transaction
+        /// for all command
+        /// </summary>
+        /// <returns></returns>
+        public Task<bool> SaveChangesTransactionAsync()
+        {
+            return MongoContext.SaveChangesTransactionAsync();
+        }
 
         #region IDisposable Support  
 
@@ -29,8 +56,7 @@ namespace BaseLibrary.MongoDB
             if (disposing)
             {
                 //dispose managed state (managed objects).  
-                Session.Dispose();
-                SessionAsync.Dispose();
+                MongoContext.Dispose();
             }
 
             // free unmanaged resources (unmanaged objects) and override a finalizer below.  

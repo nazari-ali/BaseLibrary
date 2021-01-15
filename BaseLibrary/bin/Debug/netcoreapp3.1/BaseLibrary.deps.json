@@ -6,7 +6,7 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v3.1": {
-      "BaseLibrary/1.0.6": {
+      "BaseLibrary/1.0.9": {
         "dependencies": {
           "MediaTypeMap.Core": "2.3.3",
           "Microsoft.AspNetCore.Http.Features": "5.0.1",
@@ -1591,7 +1591,7 @@
     }
   },
   "libraries": {
-    "BaseLibrary/1.0.6": {
+    "BaseLibrary/1.0.9": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
