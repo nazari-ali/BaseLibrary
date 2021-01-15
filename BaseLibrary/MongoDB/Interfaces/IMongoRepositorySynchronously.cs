@@ -24,7 +24,7 @@ namespace BaseLibrary.MongoDB.Interfaces
         );
 
         TDocument FindById(
-            string id
+            string objectId
         );
 
         void InsertOne(
@@ -44,7 +44,7 @@ namespace BaseLibrary.MongoDB.Interfaces
         );
 
         void DeleteById(
-            string id
+            string objectId
         );
 
         void DeleteMany(

@@ -1,7 +1,6 @@
-﻿using BaseLibrary.MongoDB.Interfaces;
-using MongoDB.Bson;
+﻿using BaseLibrary.Extensions;
+using BaseLibrary.MongoDB.Interfaces;
 using MongoDB.Driver;
-using MongoDB.Driver.GridFS;
 using ServiceStack;
 using System;
 using System.Collections.Generic;
@@ -12,19 +11,16 @@ using System.Threading.Tasks;
 
 namespace BaseLibrary.MongoDB
 {
-    public class MongoRepository<TDocument> : IMongoRepository<TDocument>, IGridFsRepository
+    public class MongoRepository<TDocument> : IMongoRepository<TDocument>
         where TDocument : class
     {
         protected readonly IMongoCollection<TDocument> Collection;
-        protected readonly IGridFSBucket Bucket;
         private readonly IMongoContext _mongoContext;
 
         public MongoRepository(IMongoContext mongoContext)
         {
             _mongoContext = mongoContext;
-            
             Collection = mongoContext.GetCollection<TDocument>();
-            Bucket = mongoContext.Bucket;
         }
 
         #region IRepositorySynchronously
@@ -57,11 +53,10 @@ namespace BaseLibrary.MongoDB
         }
 
         public virtual TDocument FindById(
-            string id
+            string objectId
         )
         {
-            var objectId = new ObjectId(id);
-            var filter = Builders<TDocument>.Filter.Eq("_id", id);
+            var filter = Builders<TDocument>.Filter.Eq("_id", objectId.ToObjectId());
             return Collection.Find(filter).SingleOrDefault();
         }
 
@@ -104,11 +99,10 @@ namespace BaseLibrary.MongoDB
         }
 
         public void DeleteById(
-            string id
+            string objectId
         )
         {
-            var objectId = new ObjectId(id);
-            var filter = Builders<TDocument>.Filter.Eq("_id", id);
+            var filter = Builders<TDocument>.Filter.Eq("_id", objectId.ToObjectId());
 
             _mongoContext.AddCommand(() =>
                 Collection.FindOneAndDelete(_mongoContext.Session, filter)
@@ -137,14 +131,13 @@ namespace BaseLibrary.MongoDB
         }
 
         public virtual Task<TDocument> FindByIdAsync(
-            string id,
+            string objectId,
             CancellationToken cancellationToken = default
         )
         {
             return Task.Run(() =>
             {
-                var objectId = new ObjectId(id);
-                var filter = Builders<TDocument>.Filter.Eq("_id", id);
+                var filter = Builders<TDocument>.Filter.Eq("_id", objectId.ToObjectId());
 
                 return Collection.Find(filter).SingleOrDefaultAsync(cancellationToken);
             });
@@ -193,12 +186,11 @@ namespace BaseLibrary.MongoDB
         }
 
         public Task DeleteByIdAsync(
-            string id,
+            string objectId,
             CancellationToken cancellationToken = default
         )
         {
-            var objectId = new ObjectId(id);
-            var filter = Builders<TDocument>.Filter.Eq("_id", id);
+            var filter = Builders<TDocument>.Filter.Eq("_id", objectId.ToObjectId());
 
             return _mongoContext.AddCommand(() =>
                 Collection.FindOneAndDeleteAsync(_mongoContext.Session, filter, null, cancellationToken)
@@ -213,34 +205,6 @@ namespace BaseLibrary.MongoDB
             return _mongoContext.AddCommand(() =>
                 Collection.DeleteManyAsync(_mongoContext.Session, filterExpression, null, cancellationToken)
             );
-        }
-
-        #endregion
-
-        #region IGridFsRepository
-
-        public GridFSFileInfo GetGridFsInfoById(ObjectId id)
-        {
-            var filter = Builders<GridFSFileInfo>.Filter.Eq("_id", id);
-            return Bucket.Find(filter).FirstOrDefault();
-        }
-
-        public async Task<GridFSFileInfo> GetGridFsInfoByIdAsync(ObjectId id)
-        {
-            var filter = Builders<GridFSFileInfo>.Filter.Eq("_id", id);
-            return await Bucket.FindAsync(filter).Result.FirstOrDefaultAsync();
-        }
-
-        public GridFSFileInfo GetGridFsInfoByFileName(string fileName)
-        {
-            var filter = Builders<GridFSFileInfo>.Filter.Eq("filename", fileName);
-            return Bucket.Find(filter).FirstOrDefault();
-        }
-
-        public async Task<GridFSFileInfo> GetGridFsInfoByFileNameAsync(string fileName)
-        {
-            var filter = Builders<GridFSFileInfo>.Filter.Eq("filename", fileName);
-            return await Bucket.FindAsync(filter).Result.FirstOrDefaultAsync();
         }
 
         #endregion

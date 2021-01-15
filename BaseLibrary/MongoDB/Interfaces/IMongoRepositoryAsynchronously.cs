@@ -15,7 +15,7 @@ namespace BaseLibrary.MongoDB.Interfaces
         );
 
         Task<TDocument> FindByIdAsync(
-            string id,
+            string objectId,
             CancellationToken cancellationToken = default
         );
 
@@ -40,7 +40,7 @@ namespace BaseLibrary.MongoDB.Interfaces
         );
 
         Task DeleteByIdAsync(
-            string id,
+            string objectId,
             CancellationToken cancellationToken = default
         );
 

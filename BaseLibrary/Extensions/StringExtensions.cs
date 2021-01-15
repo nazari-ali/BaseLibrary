@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using System;
 
 namespace BaseLibrary.Extensions
 {
@@ -37,6 +38,25 @@ namespace BaseLibrary.Extensions
             try
             {
                 return Guid.Parse(value);
+            }
+            catch
+            {
+                return default;
+            }
+        }
+
+        /// <summary>
+        /// Cast string to objectId
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static ObjectId ToObjectId(
+            this string value
+        )
+        {
+            try
+            {
+                return ObjectId.Parse(value);
             }
             catch
             {
