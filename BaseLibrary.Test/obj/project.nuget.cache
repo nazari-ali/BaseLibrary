@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "JE8FhwS+oubxfw45Sdv188nYrsYk9MHgXWc3SccYqzLjdHj8MIRyIklok6yLEDg9sMUunWySDxdJ3ecYwey0Gg==",
+  "dgSpecHash": "e8BJykIO6TeZP+MyLXHLBpwgl2AezguT3UntpjXesNOZHZ6NqOcCX/Q5bh0ygAO0v8I6ww26ahVmyIHefD7PRA==",
   "success": true,
   "projectFilePath": "C:\\Users\\Ali\\source\\repos\\BaseLibrary\\BaseLibrary.Test\\BaseLibrary.Test.csproj",
   "expectedPackageFiles": [
@@ -142,8 +142,7 @@
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\system.xml.xmldocument\\4.3.0\\system.xml.xmldocument.4.3.0.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\system.xml.xmlserializer\\4.3.0\\system.xml.xmlserializer.4.3.0.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\system.xml.xpath\\4.3.0\\system.xml.xpath.4.3.0.nupkg.sha512",
-    "C:\\Users\\Ali\\.nuget\\packages\\system.xml.xpath.xmldocument\\4.3.0\\system.xml.xpath.xmldocument.4.3.0.nupkg.sha512",
-    "C:\\Users\\Ali\\.nuget\\packages\\base.library\\1.0.9\\base.library.1.0.9.nupkg.sha512"
+    "C:\\Users\\Ali\\.nuget\\packages\\system.xml.xpath.xmldocument\\4.3.0\\system.xml.xpath.xmldocument.4.3.0.nupkg.sha512"
   ],
   "logs": [
     {

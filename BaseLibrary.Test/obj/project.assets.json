@@ -2339,7 +2339,7 @@
           "lib/netstandard1.3/System.Xml.XPath.XmlDocument.dll": {}
         }
       },
-      "Base.Library/1.0.9": {
+      "Base.Library/1.1.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v3.1",
         "dependencies": {
@@ -7954,7 +7954,7 @@
         "system.xml.xpath.xmldocument.nuspec"
       ]
     },
-    "Base.Library/1.0.9": {
+    "Base.Library/1.1.0": {
       "type": "project",
       "path": "../BaseLibrary/BaseLibrary.csproj",
       "msbuildProject": "../BaseLibrary/BaseLibrary.csproj"
@@ -7962,7 +7962,7 @@
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.1": [
-      "Base.Library >= 1.0.9",
+      "Base.Library >= 1.1.0",
       "Microsoft.EntityFrameworkCore >= 5.0.1",
       "Microsoft.EntityFrameworkCore.InMemory >= 5.0.1",
       "Microsoft.NET.Test.Sdk >= 16.5.0",

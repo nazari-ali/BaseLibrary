@@ -2453,7 +2453,7 @@
           "lib/netstandard1.3/System.Xml.XmlSerializer.dll": {}
         }
       },
-      "Base.Library/1.0.9": {
+      "Base.Library/1.1.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v3.1",
         "dependencies": {
@@ -8086,7 +8086,7 @@
         "system.xml.xmlserializer.nuspec"
       ]
     },
-    "Base.Library/1.0.9": {
+    "Base.Library/1.1.0": {
       "type": "project",
       "path": "../BaseLibrary/BaseLibrary.csproj",
       "msbuildProject": "../BaseLibrary/BaseLibrary.csproj"
@@ -8094,7 +8094,7 @@
   },
   "projectFileDependencyGroups": {
     "net5.0": [
-      "Base.Library >= 1.0.9",
+      "Base.Library >= 1.1.0",
       "Bogus >= 32.0.2",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 5.0.2",
       "Microsoft.AspNetCore.Authentication.OpenIdConnect >= 5.0.2",

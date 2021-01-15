@@ -5,11 +5,18 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Ali Nazari</Authors>
     <Company>Dreamer</Company>
-    <Description>this library include extensions and pattern repository and unit of work and initialize dbcontext for sql, mySql and initialize for MongoDB</Description>
+    <Description>Structure Basical:
+Extensions Methods
+Sql DbContext
+Sql Repository &amp; UnitOfWork
+Mongo DbContext
+Mongo Repository &amp; UnitOfWork
+Mongo GridFs
+Utilities</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>Extension, Utilities, Repository, UnitOfWork, DbContext, MongoDB, Generic</PackageTags>
     <PackageId>Base.Library</PackageId>
-    <Version>1.0.9</Version>
+    <Version>1.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
