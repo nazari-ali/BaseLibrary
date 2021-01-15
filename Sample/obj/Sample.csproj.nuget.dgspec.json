@@ -5,7 +5,7 @@
   },
   "projects": {
     "C:\\Users\\Ali\\source\\repos\\BaseLibrary\\BaseLibrary\\BaseLibrary.csproj": {
-      "version": "1.1.0",
+      "version": "1.1.1",
       "restore": {
         "projectUniqueName": "C:\\Users\\Ali\\source\\repos\\BaseLibrary\\BaseLibrary\\BaseLibrary.csproj",
         "projectName": "Base.Library",
@@ -94,6 +94,10 @@
             "Pomelo.EntityFrameworkCore.MySql": {
               "target": "Package",
               "version": "[3.2.4, )"
+            },
+            "ServiceStack.Common": {
+              "target": "Package",
+              "version": "[5.10.4, )"
             }
           },
           "imports": [

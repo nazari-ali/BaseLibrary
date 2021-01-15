@@ -82,3 +82,11 @@ C:\Users\Ali\source\repos\BaseLibrary\Sample\bin\Release\net5.0\runtimes\win\lib
 C:\Users\Ali\source\repos\BaseLibrary\Sample\bin\Release\net5.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\Ali\source\repos\BaseLibrary\Sample\bin\Release\net5.0\BaseLibrary.dll
 C:\Users\Ali\source\repos\BaseLibrary\Sample\bin\Release\net5.0\BaseLibrary.pdb
+C:\Users\Ali\source\repos\BaseLibrary\Sample\bin\Release\net5.0\Bogus.dll
+C:\Users\Ali\source\repos\BaseLibrary\Sample\bin\Release\net5.0\Humanizer.dll
+C:\Users\Ali\source\repos\BaseLibrary\Sample\bin\Release\net5.0\Microsoft.Bcl.AsyncInterfaces.dll
+C:\Users\Ali\source\repos\BaseLibrary\Sample\bin\Release\net5.0\Microsoft.EntityFrameworkCore.Design.dll
+C:\Users\Ali\source\repos\BaseLibrary\Sample\bin\Release\net5.0\ServiceStack.Common.dll
+C:\Users\Ali\source\repos\BaseLibrary\Sample\bin\Release\net5.0\ServiceStack.Interfaces.dll
+C:\Users\Ali\source\repos\BaseLibrary\Sample\bin\Release\net5.0\ServiceStack.Text.dll
+C:\Users\Ali\source\repos\BaseLibrary\Sample\bin\Release\net5.0\System.Diagnostics.DiagnosticSource.dll

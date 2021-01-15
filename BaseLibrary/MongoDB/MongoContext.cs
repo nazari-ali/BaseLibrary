@@ -2,6 +2,7 @@
 using BaseLibrary.Models.MongoDB;
 using BaseLibrary.MongoDB.Interfaces;
 using MongoDB.Driver;
+using MongoDB.Driver.GridFS;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,8 +29,8 @@ namespace BaseLibrary.MongoDB
     public class MongoContext : IMongoContext
     {
         private readonly IMongoDatabase _database;
-        private readonly GridFsSettings _gridFsSetting;
-        private IClientSessionHandle _session;
+        private readonly IClientSessionHandle _session;
+        private readonly IGridFSBucket _bucket;
         private List<Action> _commands;
 
         public MongoContext(IMongoDbSettings settings)
@@ -44,14 +45,19 @@ namespace BaseLibrary.MongoDB
             _database = mongoDbClient.GetDatabase(settings.DatabaseName);
 
             // bucket settings for gridFS
-            _gridFsSetting = settings.GridFsSettings;
+            _bucket = new GridFSBucket(_database, new GridFSBucketOptions
+            {
+                BucketName = settings.GridFsSettings.BucketName,
+                ChunkSizeBytes = settings.GridFsSettings.BucketSize,
+                WriteConcern = WriteConcern.WMajority,
+                ReadPreference = ReadPreference.Primary
+            });
 
             _session = mongoDbClient.StartSession();
         }
 
-        public IMongoDatabase Database => _database;
-        public GridFsSettings GridFsSettings => _gridFsSetting;
         public IClientSessionHandle Session => _session;
+        public IGridFSBucket Bucket => _bucket;
 
         /// <summary>
         /// Get collection

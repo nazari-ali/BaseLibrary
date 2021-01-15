@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace BaseLibrary.MongoDB.Interfaces
 {
-    public interface IMongoRepositoryAsynchronously<TDocument> where TDocument : IDocument
+    public interface IMongoRepositoryAsynchronously<TDocument> 
+        where TDocument : class
     {
         Task<TDocument> FindOneAsync(
             Expression<Func<TDocument, bool>> filterExpression,

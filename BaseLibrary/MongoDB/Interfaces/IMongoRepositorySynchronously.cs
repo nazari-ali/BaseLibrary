@@ -5,7 +5,8 @@ using System.Linq.Expressions;
 
 namespace BaseLibrary.MongoDB.Interfaces
 {
-    public interface IMongoRepositorySynchronously<TDocument> where TDocument : IDocument
+    public interface IMongoRepositorySynchronously<TDocument> 
+        where TDocument : class
     {
         IQueryable<TDocument> AsQueryable();
 

@@ -172,3 +172,7 @@ C:\Users\Ali\source\repos\BaseLibrary\BaseLibrary.Test\obj\Release\netcoreapp3.1
 C:\Users\Ali\source\repos\BaseLibrary\BaseLibrary.Test\obj\Release\netcoreapp3.1\BaseLibrary.Test.pdb
 C:\Users\Ali\source\repos\BaseLibrary\BaseLibrary.Test\obj\Release\netcoreapp3.1\BaseLibrary.Test.genruntimeconfig.cache
 C:\Users\Ali\source\repos\BaseLibrary\BaseLibrary.Test\bin\Release\netcoreapp3.1\MongoDB.Driver.GridFS.dll
+C:\Users\Ali\source\repos\BaseLibrary\BaseLibrary.Test\bin\Release\netcoreapp3.1\Microsoft.Bcl.AsyncInterfaces.dll
+C:\Users\Ali\source\repos\BaseLibrary\BaseLibrary.Test\bin\Release\netcoreapp3.1\ServiceStack.Common.dll
+C:\Users\Ali\source\repos\BaseLibrary\BaseLibrary.Test\bin\Release\netcoreapp3.1\ServiceStack.Interfaces.dll
+C:\Users\Ali\source\repos\BaseLibrary\BaseLibrary.Test\bin\Release\netcoreapp3.1\ServiceStack.Text.dll
