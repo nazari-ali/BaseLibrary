@@ -1,9 +1,0 @@
-C:\Users\Ali\source\repos\BaseLibrary\BaseLibrary\bin\Debug\netcoreapp3.1\BaseLibrary.deps.json
-C:\Users\Ali\source\repos\BaseLibrary\BaseLibrary\bin\Debug\netcoreapp3.1\BaseLibrary.dll
-C:\Users\Ali\source\repos\BaseLibrary\BaseLibrary\bin\Debug\netcoreapp3.1\BaseLibrary.pdb
-C:\Users\Ali\source\repos\BaseLibrary\BaseLibrary\obj\Debug\netcoreapp3.1\BaseLibrary.AssemblyInfoInputs.cache
-C:\Users\Ali\source\repos\BaseLibrary\BaseLibrary\obj\Debug\netcoreapp3.1\BaseLibrary.AssemblyInfo.cs
-C:\Users\Ali\source\repos\BaseLibrary\BaseLibrary\obj\Debug\netcoreapp3.1\BaseLibrary.csproj.CoreCompileInputs.cache
-C:\Users\Ali\source\repos\BaseLibrary\BaseLibrary\obj\Debug\netcoreapp3.1\BaseLibrary.dll
-C:\Users\Ali\source\repos\BaseLibrary\BaseLibrary\obj\Debug\netcoreapp3.1\BaseLibrary.pdb
-C:\Users\Ali\source\repos\BaseLibrary\BaseLibrary\obj\Debug\netcoreapp3.1\BaseLibrary.csprojAssemblyReference.cache
