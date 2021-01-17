@@ -1,4 +1,5 @@
 ﻿using BaseLibrary.Exceptions.Helper;
+using BaseLibrary.Extensions;
 using System;
 using System.Net;
 
@@ -18,12 +19,18 @@ namespace BaseLibrary.Exceptions
 
         public PaymentException(string message) : base(HttpStatusCode.PaymentRequired, message)
         {
-            ClientMessage = LocalExceptionMessage.PaymentMessage;
+            if (!message.HasValue())
+                ClientMessage = LocalExceptionMessage.PaymentMessage;
+
+            ClientMessage = message;
         }
 
         public PaymentException(string message, object additionalData) : base(HttpStatusCode.PaymentRequired, message, additionalData)
         {
-            ClientMessage = LocalExceptionMessage.PaymentMessage;
+            if (!message.HasValue())
+                ClientMessage = LocalExceptionMessage.PaymentMessage;
+
+            ClientMessage = message;
         }
 
         public PaymentException(Exception exception) : base(HttpStatusCode.PaymentRequired, exception)
@@ -38,12 +45,18 @@ namespace BaseLibrary.Exceptions
 
         public PaymentException(string message, Exception exception) : base(HttpStatusCode.PaymentRequired, message, exception)
         {
-            ClientMessage = LocalExceptionMessage.PaymentMessage;
+            if (!message.HasValue())
+                ClientMessage = LocalExceptionMessage.PaymentMessage;
+
+            ClientMessage = message;
         }
 
         public PaymentException(string message, Exception exception, object additionalData) : base(HttpStatusCode.PaymentRequired, message, exception, additionalData)
         {
-            ClientMessage = LocalExceptionMessage.PaymentMessage;
+            if (!message.HasValue())
+                ClientMessage = LocalExceptionMessage.PaymentMessage;
+
+            ClientMessage = message;
         }
     }
 }

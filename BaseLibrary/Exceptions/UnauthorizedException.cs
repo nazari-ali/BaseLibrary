@@ -1,4 +1,5 @@
 ﻿using BaseLibrary.Exceptions.Helper;
+using BaseLibrary.Extensions;
 using System;
 using System.Net;
 
@@ -18,12 +19,18 @@ namespace BaseLibrary.Exceptions
 
         public UnauthorizedException(string message) : base(HttpStatusCode.Unauthorized, message)
         {
-            ClientMessage = LocalExceptionMessage.UnauthorizedMessage;
+            if (!message.HasValue())
+                ClientMessage = LocalExceptionMessage.UnauthorizedMessage;
+
+            ClientMessage = message;
         }
 
         public UnauthorizedException(string message, object additionalData) : base(HttpStatusCode.Unauthorized, message, additionalData)
         {
-            ClientMessage = LocalExceptionMessage.UnauthorizedMessage;
+            if (!message.HasValue())
+                ClientMessage = LocalExceptionMessage.UnauthorizedMessage;
+
+            ClientMessage = message;
         }
 
         public UnauthorizedException(Exception exception) : base(HttpStatusCode.Unauthorized, exception)
@@ -38,12 +45,18 @@ namespace BaseLibrary.Exceptions
 
         public UnauthorizedException(string message, Exception exception) : base(HttpStatusCode.Unauthorized, message, exception)
         {
-            ClientMessage = LocalExceptionMessage.UnauthorizedMessage;
+            if (!message.HasValue())
+                ClientMessage = LocalExceptionMessage.UnauthorizedMessage;
+
+            ClientMessage = message;
         }
 
         public UnauthorizedException(string message, Exception exception, object additionalData) : base(HttpStatusCode.Unauthorized, message, exception, additionalData)
         {
-            ClientMessage = LocalExceptionMessage.UnauthorizedMessage;
+            if (!message.HasValue())
+                ClientMessage = LocalExceptionMessage.UnauthorizedMessage;
+
+            ClientMessage = message;
         }
     }
 }

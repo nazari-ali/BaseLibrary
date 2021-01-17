@@ -1,4 +1,5 @@
 ﻿using BaseLibrary.Exceptions.Helper;
+using BaseLibrary.Extensions;
 using System;
 using System.Net;
 
@@ -18,12 +19,18 @@ namespace BaseLibrary.Exceptions
 
         public UpgradeRequiredException(string message) : base(HttpStatusCode.UpgradeRequired, message)
         {
-            ClientMessage = LocalExceptionMessage.UpgradeRequiredMessage;
+            if (!message.HasValue())
+                ClientMessage = LocalExceptionMessage.UpgradeRequiredMessage;
+
+            ClientMessage = message;
         }
 
         public UpgradeRequiredException(string message, object additionalData) : base(HttpStatusCode.UpgradeRequired, message, additionalData)
         {
-            ClientMessage = LocalExceptionMessage.UpgradeRequiredMessage;
+            if (!message.HasValue())
+                ClientMessage = LocalExceptionMessage.UpgradeRequiredMessage;
+
+            ClientMessage = message;
         }
 
         public UpgradeRequiredException(Exception exception) : base(HttpStatusCode.UpgradeRequired, exception)
@@ -38,12 +45,18 @@ namespace BaseLibrary.Exceptions
 
         public UpgradeRequiredException(string message, Exception exception) : base(HttpStatusCode.UpgradeRequired, message, exception)
         {
-            ClientMessage = LocalExceptionMessage.UpgradeRequiredMessage;
+            if (!message.HasValue())
+                ClientMessage = LocalExceptionMessage.UpgradeRequiredMessage;
+
+            ClientMessage = message;
         }
 
         public UpgradeRequiredException(string message, Exception exception, object additionalData) : base(HttpStatusCode.UpgradeRequired, message, exception, additionalData)
         {
-            ClientMessage = LocalExceptionMessage.UpgradeRequiredMessage;
+            if (!message.HasValue())
+                ClientMessage = LocalExceptionMessage.UpgradeRequiredMessage;
+
+            ClientMessage = message;
         }
     }
 }

@@ -6,6 +6,7 @@ namespace BaseLibrary.Exceptions.Helper
 {
     internal static class LocalExceptionMessage
     {
+        internal static string SuccessdMessage => "mission accomplished.";
         internal static string NotFoundMessage => "The requested information was not found.";
         internal static string ForbiddenMessage => "You do not have access to this section.";
         internal static string InternalServerErrorMessage => "There is a problem with the system.";

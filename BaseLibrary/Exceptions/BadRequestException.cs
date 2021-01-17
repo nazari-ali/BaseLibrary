@@ -1,4 +1,5 @@
 ﻿using BaseLibrary.Exceptions.Helper;
+using BaseLibrary.Extensions;
 using System;
 using System.Net;
 
@@ -18,12 +19,18 @@ namespace BaseLibrary.Exceptions
 
         public BadRequestException(string message) : base(HttpStatusCode.BadRequest, message)
         {
-            ClientMessage = LocalExceptionMessage.BadRequestMessage;
+            if(!message.HasValue())
+                ClientMessage = LocalExceptionMessage.BadRequestMessage;
+
+            ClientMessage = message;
         }
 
         public BadRequestException(string message, object additionalData) : base(HttpStatusCode.BadRequest, message, additionalData)
         {
-            ClientMessage = LocalExceptionMessage.BadRequestMessage;
+            if (!message.HasValue())
+                ClientMessage = LocalExceptionMessage.BadRequestMessage;
+
+            ClientMessage = message;
         }
 
         public BadRequestException(Exception exception) : base(HttpStatusCode.BadRequest, exception)
@@ -38,12 +45,18 @@ namespace BaseLibrary.Exceptions
 
         public BadRequestException(string message, Exception exception) : base(HttpStatusCode.BadRequest, message, exception)
         {
-            ClientMessage = LocalExceptionMessage.BadRequestMessage;
+            if (!message.HasValue())
+                ClientMessage = LocalExceptionMessage.BadRequestMessage;
+
+            ClientMessage = message;
         }
 
         public BadRequestException(string message, Exception exception, object additionalData) : base(HttpStatusCode.BadRequest, message, exception, additionalData)
         {
-            ClientMessage = LocalExceptionMessage.BadRequestMessage;
+            if (!message.HasValue())
+                ClientMessage = LocalExceptionMessage.BadRequestMessage;
+
+            ClientMessage = message;
         }
     }
 }

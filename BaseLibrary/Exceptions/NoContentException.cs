@@ -1,4 +1,5 @@
 ﻿using BaseLibrary.Exceptions.Helper;
+using BaseLibrary.Extensions;
 using System;
 using System.Net;
 
@@ -18,12 +19,18 @@ namespace BaseLibrary.Exceptions
 
         public NoContentException(string message) : base(HttpStatusCode.NoContent, message)
         {
-            ClientMessage = LocalExceptionMessage.NotContentMessage;
+            if (!message.HasValue())
+                ClientMessage = LocalExceptionMessage.NotContentMessage;
+
+            ClientMessage = message;
         }
 
         public NoContentException(string message, object additionalData) : base(HttpStatusCode.NoContent, message, additionalData)
         {
-            ClientMessage = LocalExceptionMessage.NotContentMessage;
+            if (!message.HasValue())
+                ClientMessage = LocalExceptionMessage.NotContentMessage;
+
+            ClientMessage = message;
         }
 
         public NoContentException(Exception exception) : base(HttpStatusCode.NoContent, exception)
@@ -38,12 +45,18 @@ namespace BaseLibrary.Exceptions
 
         public NoContentException(string message, Exception exception) : base(HttpStatusCode.NoContent, message, exception)
         {
-            ClientMessage = LocalExceptionMessage.NotContentMessage;
+            if (!message.HasValue())
+                ClientMessage = LocalExceptionMessage.NotContentMessage;
+
+            ClientMessage = message;
         }
 
         public NoContentException(string message, Exception exception, object additionalData) : base(HttpStatusCode.NoContent, message, exception, additionalData)
         {
-            ClientMessage = LocalExceptionMessage.NotContentMessage;
+            if (!message.HasValue())
+                ClientMessage = LocalExceptionMessage.NotContentMessage;
+
+            ClientMessage = message;
         }
     }
 }

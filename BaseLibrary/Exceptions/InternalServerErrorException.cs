@@ -1,4 +1,5 @@
 ﻿using BaseLibrary.Exceptions.Helper;
+using BaseLibrary.Extensions;
 using System;
 using System.Net;
 
@@ -18,12 +19,18 @@ namespace BaseLibrary.Exceptions
 
         public InternalServerErrorException(string message) : base(HttpStatusCode.InternalServerError, message)
         {
-            ClientMessage = LocalExceptionMessage.InternalServerErrorMessage;
+            if (!message.HasValue())
+                ClientMessage = LocalExceptionMessage.InternalServerErrorMessage;
+
+            ClientMessage = message;
         }
 
         public InternalServerErrorException(string message, object additionalData) : base(HttpStatusCode.InternalServerError, message, additionalData)
         {
-            ClientMessage = LocalExceptionMessage.InternalServerErrorMessage;
+            if (!message.HasValue())
+                ClientMessage = LocalExceptionMessage.InternalServerErrorMessage;
+
+            ClientMessage = message;
         }
 
         public InternalServerErrorException(Exception exception) : base(HttpStatusCode.InternalServerError, exception)
@@ -38,12 +45,18 @@ namespace BaseLibrary.Exceptions
 
         public InternalServerErrorException(string message, Exception exception) : base(HttpStatusCode.InternalServerError, message, exception)
         {
-            ClientMessage = LocalExceptionMessage.InternalServerErrorMessage;
+            if (!message.HasValue())
+                ClientMessage = LocalExceptionMessage.InternalServerErrorMessage;
+
+            ClientMessage = message;
         }
 
         public InternalServerErrorException(string message, Exception exception, object additionalData) : base(HttpStatusCode.InternalServerError, message, exception, additionalData)
         {
-            ClientMessage = LocalExceptionMessage.InternalServerErrorMessage;
+            if (!message.HasValue())
+                ClientMessage = LocalExceptionMessage.InternalServerErrorMessage;
+
+            ClientMessage = message;
         }
     }
 }

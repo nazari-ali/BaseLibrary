@@ -1,4 +1,5 @@
 ﻿using BaseLibrary.Exceptions.Helper;
+using BaseLibrary.Extensions;
 using System;
 using System.Net;
 
@@ -18,12 +19,18 @@ namespace BaseLibrary.Exceptions
 
         public ForbiddenException(string message) : base(HttpStatusCode.Forbidden, message)
         {
-            ClientMessage = LocalExceptionMessage.ForbiddenMessage;
+            if (!message.HasValue())
+                ClientMessage = LocalExceptionMessage.ForbiddenMessage;
+
+            ClientMessage = message;
         }
 
         public ForbiddenException(string message, object additionalData) : base(HttpStatusCode.Forbidden, message, additionalData)
         {
-            ClientMessage = LocalExceptionMessage.ForbiddenMessage;
+            if (!message.HasValue())
+                ClientMessage = LocalExceptionMessage.ForbiddenMessage;
+
+            ClientMessage = message;
         }
 
         public ForbiddenException(Exception exception) : base(HttpStatusCode.Forbidden, exception)
@@ -38,12 +45,18 @@ namespace BaseLibrary.Exceptions
 
         public ForbiddenException(string message, Exception exception) : base(HttpStatusCode.Forbidden, message, exception)
         {
-            ClientMessage = LocalExceptionMessage.ForbiddenMessage;
+            if (!message.HasValue())
+                ClientMessage = LocalExceptionMessage.ForbiddenMessage;
+
+            ClientMessage = message;
         }
 
         public ForbiddenException(string message, Exception exception, object additionalData) : base(HttpStatusCode.Forbidden, message, exception, additionalData)
         {
-            ClientMessage = LocalExceptionMessage.ForbiddenMessage;
+            if (!message.HasValue())
+                ClientMessage = LocalExceptionMessage.ForbiddenMessage;
+
+            ClientMessage = message;
         }
     }
 }

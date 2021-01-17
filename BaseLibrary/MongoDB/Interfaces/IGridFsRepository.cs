@@ -6,10 +6,14 @@ namespace BaseLibrary.MongoDB.Interfaces
 {
     public interface IGridFsRepository
     {
-        GridFSFileInfo GetGridFsInfoById(ObjectId objectId);
-        Task<GridFSFileInfo> GetGridFsInfoByIdAsync(ObjectId objectId);
-        GridFSFileInfo GetGridFsInfoByFileName(string fileName);
-        Task<GridFSFileInfo> GetGridFsInfoByFileNameAsync(string fileName);
+        GridFSFileInfo Get(ObjectId objectId);
+        Task<GridFSFileInfo> GetAsync(ObjectId objectId);
+        GridFSFileInfo Get(string fileName);
+        Task<GridFSFileInfo> GetAsync(string fileName);
+        bool Exist(ObjectId objectId);
+        Task<bool> ExistAsync(ObjectId objectId);
+        bool Exist(string fileName);
+        Task<bool> ExistAsync(string fileName);
         BsonDocument GetMetadata(ObjectId objectId);
         Task<BsonDocument> GetMetadataAsync(ObjectId objectId);
         string GetMetadata(ObjectId objectId, string element);

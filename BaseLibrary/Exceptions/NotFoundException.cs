@@ -1,4 +1,5 @@
 ﻿using BaseLibrary.Exceptions.Helper;
+using BaseLibrary.Extensions;
 using System;
 using System.Net;
 
@@ -18,12 +19,18 @@ namespace BaseLibrary.Exceptions
 
         public NotFoundException(string message) : base(HttpStatusCode.NotFound, message)
         {
-            ClientMessage = LocalExceptionMessage.NotFoundMessage;
+            if (!message.HasValue())
+                ClientMessage = LocalExceptionMessage.NotFoundMessage;
+
+            ClientMessage = message;
         }
 
         public NotFoundException(string message, object additionalData) : base(HttpStatusCode.NotFound, message, additionalData)
         {
-            ClientMessage = LocalExceptionMessage.NotFoundMessage;
+            if (!message.HasValue())
+                ClientMessage = LocalExceptionMessage.NotFoundMessage;
+
+            ClientMessage = message;
         }
 
         public NotFoundException(Exception exception ) : base(HttpStatusCode.NotFound, exception)
@@ -38,12 +45,18 @@ namespace BaseLibrary.Exceptions
 
         public NotFoundException(string message, Exception exception) :  base(HttpStatusCode.NotFound, message, exception)
         {
-            ClientMessage = LocalExceptionMessage.NotFoundMessage;
+            if (!message.HasValue())
+                ClientMessage = LocalExceptionMessage.NotFoundMessage;
+
+            ClientMessage = message;
         }
 
         public NotFoundException(string message, Exception exception, object additionalData) : base(HttpStatusCode.NotFound, message, exception, additionalData)
         {
-            ClientMessage = LocalExceptionMessage.NotFoundMessage;
+            if (!message.HasValue())
+                ClientMessage = LocalExceptionMessage.NotFoundMessage;
+
+            ClientMessage = message;
         }
     }
 }

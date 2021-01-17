@@ -5,11 +5,12 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Ali Nazari</Authors>
     <Company>Dreamer</Company>
-    <Description>Structure Basical: Extensions Methods, Sql DbContext, Sql Repository &amp; UnitOfWork, Mongo DbContext, Mongo Repository &amp; UnitOfWork, Mongo GridFs, Utilities</Description>
+    <Description>Structure Basical: 
+Extensions Methods, Sql DbContext, Sql Repository &amp; UnitOfWork, Mongo DbContext, Mongo Repository &amp; UnitOfWork, Mongo GridFs, Utilities, Exception Handler, ApiResponse</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageTags>Extension, Utilities, Repository, UnitOfWork, DbContext, MongoDB, GridFs, Generic</PackageTags>
+    <PackageTags>Extension, Utilities, Repository, UnitOfWork, DbContext, MongoDB, GridFs, Generic, Exception, ApiResponse</PackageTags>
     <PackageId>Base.Library</PackageId>
-    <Version>1.1.4</Version>
+    <Version>1.1.6</Version>
   </PropertyGroup>
 
   <ItemGroup>

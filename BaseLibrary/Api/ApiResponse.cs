@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BaseLibrary.Exceptions.Helper;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +29,7 @@ namespace BaseLibrary.Api
         /// <param name="result"></param>
         public static implicit operator ApiResponse(OkResult result)
         {
-            return new ApiResponse(true, HttpStatusCode.OK, null);
+            return new ApiResponse(true, HttpStatusCode.OK, LocalExceptionMessage.SuccessdMessage);
         }
 
         /// <summary>
@@ -37,7 +38,7 @@ namespace BaseLibrary.Api
         /// <param name="result"></param>
         public static implicit operator ApiResponse(BadRequestResult result)
         {
-            return new ApiResponse(false, HttpStatusCode.BadRequest, null);
+            return new ApiResponse(false, HttpStatusCode.BadRequest, LocalExceptionMessage.BadRequestMessage);
         }
 
         /// <summary>
@@ -70,7 +71,7 @@ namespace BaseLibrary.Api
         /// <param name="result"></param>
         public static implicit operator ApiResponse(NotFoundResult result)
         {
-            return new ApiResponse(false, HttpStatusCode.NotFound, null);
+            return new ApiResponse(false, HttpStatusCode.NotFound, LocalExceptionMessage.NotFoundMessage);
         }
 
         #endregion
@@ -95,7 +96,7 @@ namespace BaseLibrary.Api
         /// <param name="data"></param>
         public static implicit operator ApiResponse<TData>(TData data)
         {
-            return new ApiResponse<TData>(true, HttpStatusCode.OK, data, null);
+            return new ApiResponse<TData>(true, HttpStatusCode.OK, data, LocalExceptionMessage.SuccessdMessage);
         }
 
         /// <summary>
@@ -104,7 +105,7 @@ namespace BaseLibrary.Api
         /// <param name="result"></param>
         public static implicit operator ApiResponse<TData>(OkResult result)
         {
-            return new ApiResponse<TData>(true, HttpStatusCode.OK, null, null);
+            return new ApiResponse<TData>(true, HttpStatusCode.OK, null, LocalExceptionMessage.SuccessdMessage);
         }
 
         /// <summary>
@@ -113,7 +114,7 @@ namespace BaseLibrary.Api
         /// <param name="result"></param>
         public static implicit operator ApiResponse<TData>(OkObjectResult result)
         {
-            return new ApiResponse<TData>(true, HttpStatusCode.OK, (TData)result.Value, null);
+            return new ApiResponse<TData>(true, HttpStatusCode.OK, (TData)result.Value, LocalExceptionMessage.SuccessdMessage);
         }
 
         /// <summary>
@@ -122,7 +123,7 @@ namespace BaseLibrary.Api
         /// <param name="result"></param>
         public static implicit operator ApiResponse<TData>(BadRequestResult result)
         {
-            return new ApiResponse<TData>(false, HttpStatusCode.BadRequest, null, null);
+            return new ApiResponse<TData>(false, HttpStatusCode.BadRequest, null, LocalExceptionMessage.BadRequestMessage);
         }
 
         /// <summary>
@@ -155,7 +156,7 @@ namespace BaseLibrary.Api
         /// <param name="result"></param>
         public static implicit operator ApiResponse<TData>(NotFoundResult result)
         {
-            return new ApiResponse<TData>(false, HttpStatusCode.NotFound, null, null);
+            return new ApiResponse<TData>(false, HttpStatusCode.NotFound, null, LocalExceptionMessage.NotFoundMessage);
         }
 
         /// <summary>
@@ -164,7 +165,7 @@ namespace BaseLibrary.Api
         /// <param name="result"></param>
         public static implicit operator ApiResponse<TData>(NotFoundObjectResult result)
         {
-            return new ApiResponse<TData>(false, HttpStatusCode.NotFound, (TData)result.Value, null);
+            return new ApiResponse<TData>(false, HttpStatusCode.NotFound, (TData)result.Value, LocalExceptionMessage.NotFoundMessage);
         }
 
         #endregion
