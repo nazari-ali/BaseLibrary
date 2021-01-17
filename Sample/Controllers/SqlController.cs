@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using BaseLibrary.Attributes;
+using BaseLibrary.Exceptions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Sample.Sql.Entities.Enums;
 using Sample.Sql.Entities.GenreEntity;
@@ -13,6 +15,7 @@ namespace Sample.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [ApiResponse]
     public class SqlController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -25,30 +28,37 @@ namespace Sample.Controllers
         [HttpGet]
         public async Task Test()
         {
-            // var result = await _unitOfWork.Genres.GetAllAsync();
-
-            var localizationName = new List<GenreLocalizationName>
+            try
             {
-                 new GenreLocalizationName
-                {
-                    LanguageType = LanguageType.English,
-                    Title = "Pop"
-                },
-                  new GenreLocalizationName
-                {
-                    LanguageType = LanguageType.Persian,
-                    Title = "پاپ"
-                }
-            };
+                // var result = await _unitOfWork.Genres.GetAllAsync();
 
-            var genre = new Genre
+                var localizationName = new List<GenreLocalizationName>
+                {
+                     new GenreLocalizationName
+                    {
+                        LanguageType = LanguageType.English,
+                        Title = "Pop"
+                    },
+                      new GenreLocalizationName
+                    {
+                        LanguageType = LanguageType.Persian,
+                        Title = "پاپ"
+                    }
+                };
+
+                var genre = new Genre
+                {
+                    DateOfRegistration = DateTime.UtcNow,
+                    LocalizationNames = localizationName
+                };
+
+                await _unitOfWork.Genres.AddAsync(genre);
+                await _unitOfWork.SaveChangesTransactionAsync();
+            }
+            catch (Exception ex)
             {
-                DateOfRegistration = DateTime.UtcNow,
-                LocalizationNames = localizationName
-            };
-
-            await _unitOfWork.Genres.AddAsync(genre);
-            await _unitOfWork.SaveChangesTransactionAsync();
+                throw new InternalServerErrorException(ex);
+            }
         }
     }
 }

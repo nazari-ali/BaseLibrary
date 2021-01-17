@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BaseLibrary.Attributes;
+using Microsoft.AspNetCore.Mvc;
 using Sample.Mongo.Entities;
 using Sample.Mongo.UnitOfWork;
 using System;
@@ -10,6 +11,7 @@ namespace Sample.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [ApiResponse]
     public class MongoController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;

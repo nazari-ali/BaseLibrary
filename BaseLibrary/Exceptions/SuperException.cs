@@ -81,11 +81,11 @@ namespace BaseLibrary.Exceptions
 
             if(message.HasValue())
             {
-                result = $"Message: \n {message}";
+                result = $"Message: \n {message} \n";
 
                 if (exception != null)
                 {
-                    result += GetException(true);
+                    result += exception.GetNormalizedException(true);
                 }
 
                 result += GetAdditionalData();
@@ -94,20 +94,10 @@ namespace BaseLibrary.Exceptions
             {
                 if (exception != null)
                 {
-                    result += GetException();
+                    result += exception.GetNormalizedException();
                 }
 
                 result += GetAdditionalData();
-            }
-
-            string GetException(bool addNewLine = false)
-            {
-                if (exception == null)
-                {
-                    return string.Empty;
-                }
-
-                return $"{(addNewLine ? " \n " : "")}Exception Path: \n {exception.GetExceptionPath()} \n Exception Message: \n {exception.GetInnerExceptionMessage()}";
             }
 
             string GetAdditionalData()

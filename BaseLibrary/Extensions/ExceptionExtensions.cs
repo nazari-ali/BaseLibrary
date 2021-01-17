@@ -47,5 +47,24 @@ namespace BaseLibrary.Extensions
 
             return $"Method Path: {errorPath}, Method Exception Line: {errorLine}, Method Exception Line Column: {errorLineColumn}";
         }
+
+        /// <summary>
+        /// Get normalized exception
+        /// </summary>
+        /// <param name="exception"></param>
+        /// <param name="addNewLine"></param>
+        /// <returns></returns>
+        public static string GetNormalizedException(
+            this Exception exception,
+            bool addNewLine = false
+        )
+        {
+            if (exception == null)
+            {
+                return string.Empty;
+            }
+
+            return $"{(addNewLine ? " \n " : "")}Exception Path: \n {exception.GetExceptionPath()} \n\n Exception Message: \n {exception.GetInnerExceptionMessage()} \n";
+        }
     }
 }

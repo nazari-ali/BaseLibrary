@@ -1,3 +1,4 @@
+using BaseLibrary.Extensions;
 using BaseLibrary.MongoDB;
 using BaseLibrary.MongoDB.Interfaces;
 using Microsoft.AspNetCore.Builder;
@@ -46,7 +47,7 @@ namespace Sample
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            //if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
@@ -58,6 +59,8 @@ namespace Sample
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseSuperExtentionHandler();
 
             app.UseEndpoints(endpoints =>
             {
