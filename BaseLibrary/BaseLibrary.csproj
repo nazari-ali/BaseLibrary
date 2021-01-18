@@ -10,7 +10,7 @@ Extensions Methods, Sql DbContext, Sql Repository &amp; UnitOfWork, Mongo DbCont
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>Extension, Utilities, Repository, UnitOfWork, DbContext, MongoDB, GridFs, Generic, Exception, ApiResponse</PackageTags>
     <PackageId>Base.Library</PackageId>
-    <Version>1.1.6</Version>
+    <Version>1.1.7</Version>
   </PropertyGroup>
 
   <ItemGroup>
