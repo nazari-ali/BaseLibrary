@@ -26,7 +26,7 @@ namespace Sample.Controllers
         }
 
         [HttpGet]
-        public async Task Test()
+        public async Task<IActionResult> Test()
         {
             try
             {
@@ -54,6 +54,8 @@ namespace Sample.Controllers
 
                 await _unitOfWork.Genres.AddAsync(genre);
                 await _unitOfWork.SaveChangesTransactionAsync();
+
+                return Ok();
             }
             catch (Exception ex)
             {

@@ -22,7 +22,7 @@ namespace Sample.Controllers
         }
 
         [HttpGet]
-        public async Task Test()
+        public async Task<IActionResult> Test()
         {
             var product1 = await _unitOfWork.Products.FindByIdAsync("5ff7aebd223ed7b226b4d3a6");
 
@@ -66,6 +66,8 @@ namespace Sample.Controllers
             });
 
             _unitOfWork.SaveChanges();
+
+            return Ok();
         }
     }
 }

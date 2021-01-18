@@ -1,11 +1,10 @@
 ﻿using BaseLibrary.Api;
+using BaseLibrary.Exceptions.Helper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Text;
 
 namespace BaseLibrary.Attributes
 {
@@ -15,17 +14,17 @@ namespace BaseLibrary.Attributes
         {
             if (context.Result is OkObjectResult okObjectResult)
             {
-                var ApiResponse = new ApiResponse<object>(true, HttpStatusCode.OK, okObjectResult.Value, null);
+                var ApiResponse = new ApiResponse<object>(true, HttpStatusCode.OK, okObjectResult.Value, LocalExceptionMessage.SuccessdMessage);
                 context.Result = new JsonResult(ApiResponse) { StatusCode = okObjectResult.StatusCode };
             }
             else if (context.Result is OkResult okResult)
             {
-                var ApiResponse = new ApiResponse(true, HttpStatusCode.OK, null);
+                var ApiResponse = new ApiResponse(true, HttpStatusCode.OK, LocalExceptionMessage.SuccessdMessage);
                 context.Result = new JsonResult(ApiResponse) { StatusCode = okResult.StatusCode };
             }
             else if (context.Result is BadRequestResult badRequestResult)
             {
-                var ApiResponse = new ApiResponse(false, HttpStatusCode.BadRequest, null);
+                var ApiResponse = new ApiResponse(false, HttpStatusCode.BadRequest, LocalExceptionMessage.BadRequestMessage);
                 context.Result = new JsonResult(ApiResponse) { StatusCode = badRequestResult.StatusCode };
             }
             else if (context.Result is BadRequestObjectResult badRequestObjectResult)
@@ -46,18 +45,17 @@ namespace BaseLibrary.Attributes
             }
             else if (context.Result is NotFoundResult notFoundResult)
             {
-                var ApiResponse = new ApiResponse(false, HttpStatusCode.NotFound, null);
+                var ApiResponse = new ApiResponse(false, HttpStatusCode.NotFound, LocalExceptionMessage.NotFoundMessage);
                 context.Result = new JsonResult(ApiResponse) { StatusCode = notFoundResult.StatusCode };
             }
             else if (context.Result is NotFoundObjectResult notFoundObjectResult)
             {
-                var ApiResponse = new ApiResponse<object>(false, HttpStatusCode.NotFound, notFoundObjectResult.Value, null);
+                var ApiResponse = new ApiResponse<object>(false, HttpStatusCode.NotFound, notFoundObjectResult.Value, LocalExceptionMessage.NotFoundMessage);
                 context.Result = new JsonResult(ApiResponse) { StatusCode = notFoundObjectResult.StatusCode };
             }
-            else if (context.Result is ObjectResult objectResult && objectResult.StatusCode == null
-                && !(objectResult.Value is ApiResponse))
+            else if (context.Result is ObjectResult objectResult && objectResult.StatusCode == null && !(objectResult.Value is ApiResponse))
             {
-                var ApiResponse = new ApiResponse<object>(true, HttpStatusCode.NotFound, objectResult.Value, null);
+                var ApiResponse = new ApiResponse<object>(true, HttpStatusCode.NotFound, objectResult.Value, LocalExceptionMessage.NotFoundMessage);
                 context.Result = new JsonResult(ApiResponse) { StatusCode = objectResult.StatusCode };
             }
 
