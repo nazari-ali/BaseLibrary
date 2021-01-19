@@ -1,4 +1,5 @@
-﻿using BaseLibrary.Sql.Interfaces;
+﻿using BaseLibrary.Extensions;
+using BaseLibrary.Sql.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -49,6 +50,42 @@ namespace BaseLibrary.Sql
             foreach (var includeProperty in includeProperties.Split (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
             {
                 query = query.Include(includeProperty);
+            }
+
+            if (orderBy != null)
+            {
+                return orderBy(query).ToList();
+            }
+            else
+            {
+                return query.ToList();
+            }
+        }
+
+        /// <summary>  
+        /// Initializes a new instance of the <see cref="SqlRepository{TEntity}"/> class.  
+        /// Note that here I've stored Context.Set<TEntity>() in the constructor and store it in a private field like _entities.   
+        /// This way, the implementation  of our methods would be cleaner:  
+        /// _entities.ToList();  
+        /// _entities.Where();  
+        /// _entities.SingleOrDefault();  
+        /// </summary>  
+        public virtual IEnumerable<TEntity> Get(
+            Expression<Func<TEntity, bool>> filter = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            params Expression<Func<TEntity, object>>[] includes
+        )
+        {
+            IQueryable<TEntity> query = Entities;
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            if(includes.Any())
+            {
+                query = query.IncludeMultiple(includes);
             }
 
             if (orderBy != null)
@@ -291,6 +328,43 @@ namespace BaseLibrary.Sql
             foreach (var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
             {
                 query = query.Include(includeProperty);
+            }
+
+            if (orderBy != null)
+            {
+                return await orderBy(query).ToListAsync(cancellationToken);
+            }
+            else
+            {
+                return await query.ToListAsync(cancellationToken);
+            }
+        }
+
+        /// <summary>  
+        /// Initializes a new instance of the <see cref="SqlRepository{TEntity}"/> class.  
+        /// Note that here I've stored Context.Set<TEntity>() in the constructor and store it in a private field like _entities.   
+        /// This way, the implementation  of our methods would be cleaner:  
+        /// _entities.ToList();  
+        /// _entities.Where();  
+        /// _entities.SingleOrDefault();  
+        /// </summary>
+        public virtual async Task<IEnumerable<TEntity>> GetAsync(
+            Expression<Func<TEntity, bool>> filter = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            CancellationToken cancellationToken = default,
+            params Expression<Func<TEntity, object>>[] includes
+        )
+        {
+            IQueryable<TEntity> query = Entities;
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            if (includes.Any())
+            {
+                query = query.IncludeMultiple(includes);
             }
 
             if (orderBy != null)

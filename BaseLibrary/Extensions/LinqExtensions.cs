@@ -3,9 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
@@ -331,6 +333,20 @@ namespace BaseLibrary.Extensions
 
             string sql = command.CommandText;
             return sql;
+        }
+
+        public static IQueryable<TEntity> IncludeMultiple<TEntity>(
+            this IQueryable<TEntity> query,
+            params Expression<Func<TEntity, object>>[] includes
+        )
+            where TEntity : class
+        {
+            if (includes != null)
+            {
+                query = includes.Aggregate(query, (current, include) => current.Include(include));
+            }
+
+            return query;
         }
 
         #region Helper

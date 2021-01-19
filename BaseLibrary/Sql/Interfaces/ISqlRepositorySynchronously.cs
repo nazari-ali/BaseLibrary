@@ -13,6 +13,12 @@ namespace BaseLibrary.Sql.Interfaces
             string includeProperties = ""
         );
 
+        IEnumerable<TEntity> Get(
+            Expression<Func<TEntity, bool>> filter = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            params Expression<Func<TEntity, object>>[] includes
+        );
+
         IEnumerable<TEntity> GetAll();
 
         IEnumerable<TEntity> Find(

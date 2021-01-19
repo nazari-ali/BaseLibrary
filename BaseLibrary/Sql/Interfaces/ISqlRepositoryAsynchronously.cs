@@ -16,6 +16,13 @@ namespace BaseLibrary.Sql.Interfaces
             CancellationToken cancellationToken = default
         );
 
+        Task<IEnumerable<TEntity>> GetAsync(
+            Expression<Func<TEntity, bool>> filter = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            CancellationToken cancellationToken = default,
+            params Expression<Func<TEntity, object>>[] includes
+        );
+
         Task<IEnumerable<TEntity>> GetAllAsync(
             CancellationToken cancellationToken = default
         );
