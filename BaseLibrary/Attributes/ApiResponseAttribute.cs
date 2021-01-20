@@ -1,5 +1,5 @@
 ﻿using BaseLibrary.Api;
-using BaseLibrary.Exceptions.Helper;
+using BaseLibrary.Tool.Exceptions.Helper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Collections.Generic;

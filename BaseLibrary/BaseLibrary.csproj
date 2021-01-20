@@ -33,4 +33,10 @@ Extensions Methods, Sql DbContext, Sql Repository &amp; UnitOfWork, Mongo DbCont
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BaseLibrary.Mongo\BaseLibrary.Mongo.csproj" />
+    <ProjectReference Include="..\BaseLibrary.Sql\BaseLibrary.Sql.csproj" />
+    <ProjectReference Include="..\BaseLibrary.Tool\BaseLibrary.Tool.csproj" />
+  </ItemGroup>
+
 </Project>

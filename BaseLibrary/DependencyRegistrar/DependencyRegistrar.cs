@@ -1,5 +1,5 @@
 ﻿using BaseLibrary.DependencyRegistrar.Interfaces;
-using BaseLibrary.Extensions;
+using BaseLibrary.Tool.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;

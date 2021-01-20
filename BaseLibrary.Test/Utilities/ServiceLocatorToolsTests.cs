@@ -1,7 +1,8 @@
 ﻿using BaseLibrary.Sql;
-using BaseLibrary.Sql.Interfaces;
+using BaseLibrary.Sql.Repository.Interfaces;
+using BaseLibrary.Sql.UnitOfWork.Interfaces;
 using BaseLibrary.Test.Models;
-using BaseLibrary.Utilities;
+using BaseLibrary.Tool.Utilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;

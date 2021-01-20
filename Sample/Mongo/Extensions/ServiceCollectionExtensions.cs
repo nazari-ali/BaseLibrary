@@ -1,5 +1,5 @@
-﻿using BaseLibrary.MongoDB;
-using BaseLibrary.MongoDB.Interfaces;
+﻿using BaseLibrary.Mongo.Models;
+using BaseLibrary.Mongo.Models.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;

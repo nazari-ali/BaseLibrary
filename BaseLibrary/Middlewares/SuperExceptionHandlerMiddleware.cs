@@ -1,7 +1,7 @@
 ﻿using BaseLibrary.Api;
-using BaseLibrary.Exceptions;
-using BaseLibrary.Extensions;
-using BaseLibrary.Exceptions.Helper;
+using BaseLibrary.Tool.Exceptions;
+using BaseLibrary.Tool.Exceptions.Helper;
+using BaseLibrary.Tool.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;

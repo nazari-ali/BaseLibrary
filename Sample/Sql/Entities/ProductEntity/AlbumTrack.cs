@@ -1,4 +1,4 @@
-﻿using BaseLibrary.Sql;
+﻿using BaseLibrary.Sql.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;

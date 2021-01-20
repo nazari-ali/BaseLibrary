@@ -1,4 +1,4 @@
-﻿using BaseLibrary.Sql.Interfaces;
+﻿using BaseLibrary.Sql.UnitOfWork.Interfaces;
 using Sample.Sql.Repositories;
 
 namespace Sample.Sql.UnitOfWork

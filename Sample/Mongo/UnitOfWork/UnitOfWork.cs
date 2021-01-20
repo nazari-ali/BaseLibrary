@@ -1,10 +1,6 @@
-﻿using BaseLibrary.MongoDB;
-using BaseLibrary.MongoDB.Interfaces;
+﻿using BaseLibrary.Mongo.DbContext.Interfaces;
+using BaseLibrary.Mongo.UnitOfWork;
 using Sample.Mongo.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Sample.Mongo.UnitOfWork
 {

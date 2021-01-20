@@ -1,9 +1,5 @@
-﻿using BaseLibrary.MongoDB.Interfaces;
+﻿using BaseLibrary.Mongo.UnitOfWork.Interfaces;
 using Sample.Mongo.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Sample.Mongo.UnitOfWork
 {

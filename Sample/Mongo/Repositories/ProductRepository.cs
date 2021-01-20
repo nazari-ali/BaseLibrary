@@ -1,5 +1,5 @@
-﻿using BaseLibrary.MongoDB;
-using BaseLibrary.MongoDB.Interfaces;
+﻿using BaseLibrary.Mongo.DbContext.Interfaces;
+using BaseLibrary.Mongo.Repository;
 using Sample.Mongo.Entities;
 using Sample.Mongo.Repositories.Interfaces;
 

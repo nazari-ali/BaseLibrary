@@ -1,5 +1,5 @@
-﻿using NUnit.Framework;
-using BaseLibrary.Utilities;
+﻿using BaseLibrary.Tool.Utilities;
+using NUnit.Framework;
 
 namespace BaseLibrary.Test.Utilities
 {

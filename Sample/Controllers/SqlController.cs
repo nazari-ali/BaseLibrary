@@ -1,6 +1,5 @@
 ﻿using BaseLibrary.Attributes;
-using BaseLibrary.Exceptions;
-using Microsoft.AspNetCore.Http;
+using BaseLibrary.Tool.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Sample.Sql.Entities.Enums;
 using Sample.Sql.Entities.GenreEntity;
@@ -8,7 +7,6 @@ using Sample.Sql.Entities.LocalizationNameEntity;
 using Sample.Sql.UnitOfWork;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Sample.Controllers

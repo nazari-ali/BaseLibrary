@@ -1,11 +1,8 @@
-﻿using BaseLibrary.Extensions;
-using BaseLibrary.Test.Models;
-using BaseLibrary.Utilities;
+﻿using BaseLibrary.Test.Models;
+using BaseLibrary.Tool.Extensions;
+using BaseLibrary.Tool.Utilities;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BaseLibrary.Test.Utilities

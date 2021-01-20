@@ -1,4 +1,4 @@
-﻿using BaseLibrary.Utilities;
+﻿using BaseLibrary.Tool.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BaseLibrary.Extensions
