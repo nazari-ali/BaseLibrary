@@ -8,8 +8,8 @@ This library consists of several sections, which are:
 
 ### Sql
 - [DbContext](#the-first-part-is-sqldbcontext)
-- Repository
-- UnitOfWork
+- [Repository](#the-second-part-is-repository)
+- [UnitOfWork](#the-third-part-is-unitofwork)
 
 ### Mongo
 - DbContext
@@ -788,4 +788,224 @@ public class SqlRepository<TEntity> : ISqlRepository<TEntity>
 
     #endregion
 
+```
+
+# Sample
+
+```c#
+public interface IGenreRepository : ISqlRepository<Genre>
+{
+}
+
+public class GenreRepository : SqlRepository<Genre>, IGenreRepository
+{
+    public GenreRepository(AppDbContext dbContext) : base(dbContext)
+    {
+        
+    }
+}
+```
+
+# The third part is UnitOfWork, 
+in which the storage methods and how to access the Repositories are implemented.
+
+### Interface
+```c#
+public interface ISqlUnitOfWork : ISqlUnitOfWorkSynchronously, ISqlUnitOfWorkAsynchronously, IDisposable
+{
+    
+}
+
+public interface ISqlUnitOfWorkSynchronously
+{
+    ISqlRepository<TEntity> GetRepository<TEntity>()
+        where TEntity : class;
+
+    void SaveChanges();
+    bool SaveChangesTransaction();
+}
+
+public interface ISqlUnitOfWorkAsynchronously
+{
+    Task SaveChangesAsync();
+    Task<bool> SaveChangesTransactionAsync();
+}
+```
+
+### Implementation
+```c#
+public class SqlUnitOfWork : ISqlUnitOfWork
+{
+    protected readonly SqlDbContext Context;
+    private readonly Dictionary<Type, object> _repositories;
+
+    public SqlUnitOfWork(DbContext dbContext)
+    {
+        Context = (SqlDbContext)dbContext;
+        _repositories = new Dictionary<Type, object>();
+    }
+
+    /// <summary>
+    /// SaveChanges
+    /// </summary>
+    /// <returns></returns>
+    public void SaveChanges()
+    {
+        Context.SaveChanges();
+    }
+
+    /// <summary>
+    /// SaveChanges
+    /// </summary>
+    /// <returns></returns>
+    public Task SaveChangesAsync()
+    {
+        return Context.SaveChangesAsync();
+    }
+
+    /// <summary>
+    /// SaveChanges Transaction
+    /// for all command
+    /// </summary>
+    /// <returns></returns>
+    public bool SaveChangesTransaction()
+    {
+        bool returnValue = true;
+        using var dbContextTransaction = Context.Database.BeginTransaction();
+
+        try
+        {
+            Context.SaveChanges();
+            dbContextTransaction.Commit();
+        }
+        catch (Exception)
+        {
+            //Log Exception Handling message                      
+            returnValue = false;
+            dbContextTransaction.Rollback();
+        }
+
+        return returnValue;
+    }
+
+    /// <summary>
+    /// SaveChanges Transaction
+    /// for all command
+    /// </summary>
+    /// <returns></returns>
+    public async Task<bool> SaveChangesTransactionAsync()
+    {
+        bool returnValue = true;
+        await using var dbContextTransaction = await Context.Database.BeginTransactionAsync();
+
+        try
+        {
+            await Context.SaveChangesAsync();
+            await dbContextTransaction.CommitAsync();
+        }
+        catch (Exception)
+        {
+            //Log Exception Handling message                      
+            returnValue = false;
+            await dbContextTransaction.RollbackAsync();
+        }
+
+        return returnValue;
+    }
+
+    /// <summary>
+    /// Create new repository for entities
+    /// </summary>
+    /// <typeparam name="TEntity"></typeparam>
+    /// <returns></returns>
+    public ISqlRepository<TEntity> GetRepository<TEntity>()
+        where TEntity : class
+    {
+        // Checks if the Dictionary Key contains the Model class
+        if (_repositories.Keys.Contains(typeof(TEntity)))
+        {
+            // Return the repository for that Model class
+            return _repositories[typeof(TEntity)] as ISqlRepository<TEntity>;
+        }
+
+        // If the repository for that Model class doesn't exist, create it
+        var repository = new SqlRepository<TEntity>(Context);
+
+        // Add it to the dictionary
+        _repositories.Add(typeof(TEntity), repository);
+
+        return repository;
+    }
+
+    #region IDisposable Support  
+
+    // To detect redundant calls  
+    private bool _disposedValue = false; 
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (_disposedValue) return;
+
+        if (disposing)
+        {
+            //dispose managed state (managed objects).  
+            Context.Dispose();
+        }
+
+        // free unmanaged resources (unmanaged objects) and override a finalizer below.  
+        // set large fields to null.  
+
+        _disposedValue = true;
+    }
+
+    /// <summary>
+    /// override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.  
+    /// </summary>
+    ~SqlUnitOfWork()
+    {
+        // Do not change this code. Put cleanup code in Dispose(bool disposing) above.  
+        Dispose(false);
+    }
+
+    /// <summary>
+    /// This code added to correctly implement the disposable pattern.  
+    /// </summary>
+    public void Dispose()
+    {
+        // Do not change this code. Put cleanup code in Dispose(bool disposing) above.  
+        Dispose(true);
+
+        // uncomment the following line if the finalizer is overridden above.  
+        GC.SuppressFinalize(this);  
+    }
+
+    #endregion
+}
+```
+
+# Sample
+
+```c#
+public interface IUnitOfWork : ISqlUnitOfWork
+{
+    public GenreRepository Genres { get; }
+    ISqlRepository<Lyric> Lyrics { get; }
+    ISqlRepository<Quality> Qualities { get; }
+}
+
+public class UnitOfWork : SqlUnitOfWork, IUnitOfWork
+{
+    private readonly AppDbContext _dbContext;
+
+    public UnitOfWork(AppDbContext dbContext) : base(dbContext)
+    {
+        _dbContext = dbContext;
+    }
+
+    private GenreRepository _genreRepository;
+    
+    public GenreRepository Genres => _genreRepository ??= new GenreRepository(_dbContext);
+    public ISqlRepository<Lyric> Lyrics => GetRepository<Lyric>();
+    public ISqlRepository<Quality> Qualities => GetRepository<Quality>();
+}
 ```
