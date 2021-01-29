@@ -6,18 +6,18 @@ This library consists of several sections, which are:
 - MongoDB
 - GridFs
 
-### Sql
+### BaseLibrary.Sql
 - [DbContext](#the-first-part-is-sqldbcontext)
 - [Repository](#the-second-part-is-repository)
 - [UnitOfWork](#the-third-part-is-unitofwork)
 
-### Mongo
+### BaseLibrary.Mongo
 - DbContext
 - Repository
 - UnitOfWork
 - GridFs
 
-### Tools
+### BaseLibrary.Tool
 - Extension
   - Reflection
   - Linq
@@ -47,7 +47,7 @@ This library consists of several sections, which are:
 # Sql Descrption
 The Sql project consists of 3 parts, 
 
-# The first part is SqlDbContext. 
+# The first part is SqlDbContext,
 
 Inherited from the DbContext class, the SqlDbContext class has two components in this class, one of which is internal and not accessible outside the project, and the second, along with DbContextOption, takes an array from the Assembly. OnModelCreating is used.
 
@@ -61,6 +61,110 @@ Inherited from the DbContext class, the SqlDbContext class has two components in
 - Pluralizing table name like Post to Posts or Person to People
 
 > *Also done in this class for SaveChanges method and overriding.*
+
+```c#
+public class SqlDbContext : DbContext
+{
+    private readonly Assembly[] _assemblies;
+
+    /// <summary>
+    /// Using in internal project
+    /// </summary>
+    /// <param name="options"></param>
+    internal SqlDbContext(DbContextOptions options) 
+        : base(options)
+    {
+        _assemblies = new Assembly[] { typeof(ISqlEntity).Assembly };
+    }
+
+    /// <summary>
+    /// User in external project
+    /// </summary>
+    /// <param name="options"></param>
+    /// <param name="assemblies"></param>
+    public SqlDbContext(DbContextOptions options, params Assembly[] assemblies) 
+        : base(options)
+    {
+        _assemblies = assemblies;
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.RegisterAllEntitiesWithoutInheritFromInterface<ISqlEntity>(_assemblies);
+        modelBuilder.RegisterEntityTypeConfiguration(_assemblies);
+        modelBuilder.AddRestrictDeleteBehaviorConvention();
+        modelBuilder.AddSequentialGuidForIdConvention();
+        modelBuilder.AddPluralizingTableNameConvention();
+    }
+
+    public override int SaveChanges()
+    {
+        CleanString();
+        return base.SaveChanges();
+    }
+
+    public override int SaveChanges(
+        bool acceptAllChangesOnSuccess
+    )
+    {
+        CleanString();
+        return base.SaveChanges(acceptAllChangesOnSuccess);
+    }
+
+    public override Task<int> SaveChangesAsync(
+        bool acceptAllChangesOnSuccess, 
+        CancellationToken cancellationToken = default
+    )
+    {
+        CleanString();
+        return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+    }
+
+    public override Task<int> SaveChangesAsync(
+        CancellationToken cancellationToken = default
+    )
+    {
+        CleanString();
+        return base.SaveChangesAsync(cancellationToken);
+    }
+
+    #region Helper
+
+    private void CleanString()
+    {
+        var changedEntities = ChangeTracker.Entries()
+            .Where(x => x.State == EntityState.Added || x.State == EntityState.Modified);
+
+        foreach (var item in changedEntities)
+        {
+            if (item.Entity == null)
+                continue;
+
+            var properties = item.Entity.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Where(p => p.CanRead && p.CanWrite && p.PropertyType == typeof(string));
+
+            foreach (var property in properties)
+            {
+                var propName = property.Name;
+                var val = (string)property.GetValue(item.Entity, null);
+
+                if (val.HasValue())
+                {
+                    var newVal = val.ToEnglishNumber().FixPersianChars();
+                    if (newVal == val)
+                        continue;
+
+                    property.SetValue(item.Entity, newVal, null);
+                }
+            }
+        }
+    }
+
+    #endregion
+}
+```
 
 # Sample
 
@@ -142,6 +246,26 @@ public class AppDbContext : SqlDbContext
         base.OnModelCreating(modelBuilder);
     }
 }
+```
+
+### appsettings.json
+
+```json
+{
+  "ConnectionStrings": {
+    "SqlServer": "Data Source=.;Initial Catalog=Tanino;Integrated Security=true;App=EF807;"
+  }
+}
+```
+
+### Startup Project
+
+>*Put in method ConfigureServices.*
+
+```c#
+services.AddDbContextPool<AppDbContext>(options => 
+    options.UseSqlServer(Configuration.GetConnectionString("SqlServer"))
+);
 ```
 
 # The second part is Repository, 
@@ -809,7 +933,7 @@ public class GenreRepository : SqlRepository<Genre>, IGenreRepository
 # The third part is UnitOfWork, 
 in which the storage methods and how to access the Repositories are implemented.
 
-### Interface
+### UnitOfWork Interface
 ```c#
 public interface ISqlUnitOfWork : ISqlUnitOfWorkSynchronously, ISqlUnitOfWorkAsynchronously, IDisposable
 {
@@ -832,7 +956,7 @@ public interface ISqlUnitOfWorkAsynchronously
 }
 ```
 
-### Implementation
+### UnitOfWork Implementation
 ```c#
 public class SqlUnitOfWork : ISqlUnitOfWork
 {
@@ -988,7 +1112,7 @@ public class SqlUnitOfWork : ISqlUnitOfWork
 ```c#
 public interface IUnitOfWork : ISqlUnitOfWork
 {
-    public GenreRepository Genres { get; }
+    GenreRepository Genres { get; }
     ISqlRepository<Lyric> Lyrics { get; }
     ISqlRepository<Quality> Qualities { get; }
 }
@@ -1003,9 +1127,133 @@ public class UnitOfWork : SqlUnitOfWork, IUnitOfWork
     }
 
     private GenreRepository _genreRepository;
-    
     public GenreRepository Genres => _genreRepository ??= new GenreRepository(_dbContext);
+    
     public ISqlRepository<Lyric> Lyrics => GetRepository<Lyric>();
+    
     public ISqlRepository<Quality> Qualities => GetRepository<Quality>();
 }
+```
+
+### Startup Project 
+
+>*Put in method ConfigureServices.*
+
+```c#
+services.AddTransient<IUnitOfWork, UnitOfWork>();
+```
+
+# Mongo Descrption
+The Mongo project consists of 4 parts, 
+
+# The first part is MongoContext,
+
+In Class MongoContext, access to the Mongo is implemented through both the tcp and socket. Access to the bucket for GridFs is also done in this section.
+
+```c#
+public class MongoContext : IMongoContext
+{
+    private readonly IMongoDatabase _database;
+    private readonly IClientSessionHandle _session;
+    private readonly IGridFSBucket _bucket;
+    private List<Action> _commands;
+
+    public MongoContext(IMongoDbSettings settings)
+    {
+        // Every command will be stored and it'll be processed at SaveChanges
+        _commands = new List<Action>();
+
+        var mongoConnections = ReflectionExtensions.InstantiateClass<IMongoConnection>();
+
+        var mongoDbClient = mongoConnections.Single(c => c.Type == settings.ConnectionType).GetMongoClient(settings);
+
+        _database = mongoDbClient.GetDatabase(settings.DatabaseName);
+
+        // bucket settings for gridFS
+        _bucket = new GridFSBucket(_database, new GridFSBucketOptions
+        {
+            BucketName = settings.GridFsSettings.BucketName,
+            ChunkSizeBytes = settings.GridFsSettings.BucketSize,
+            WriteConcern = WriteConcern.WMajority,
+            ReadPreference = ReadPreference.Primary
+        });
+
+        _session = mongoDbClient.StartSession();
+    }
+
+    public IClientSessionHandle Session => _session;
+    public IGridFSBucket Bucket => _bucket;
+
+    /// <summary>
+    /// Get collection
+    /// If the parameter is sent, the parameter is considered, otherwise it extracts the name based on the type of TDocument that was sent.
+    /// </summary>
+    /// <typeparam name="TDocument"></typeparam>
+    /// <param name="name"></param>
+    /// <returns></returns>
+    public IMongoCollection<TDocument> GetCollection<TDocument>(string name = null)
+    {
+        var collectionName = name ?? MongoHelpers.GetCollectionName(typeof(TDocument));
+
+        return _database.GetCollection<TDocument>(collectionName);
+    }
+
+    /// <summary>
+    /// Add command
+    /// </summary>
+    /// <param name="func"></param>
+    public async Task AddCommand(Action func)
+    {
+        _commands.Add(func);
+    }
+
+    /// <summary>
+    /// SaveChanges
+    /// </summary>
+    /// <returns></returns>
+    public int SaveChanges()
+    {
+        foreach (var a in _commands) a();
+
+        return _commands.Count;
+    }
+
+    /// <summary>
+    /// Dispose session, clear commands
+    /// </summary>
+    public void Dispose()
+    {
+        _commands.Clear();
+
+        GC.SuppressFinalize(this);
+    }
+}
+```
+
+### appsettings.json
+
+```json
+{
+  "MongoDbSettings": {
+    "ConnectionType": 0,
+    "ConnectionString": "mongodb://database:password@localhost:27017/?authSource=database&replicaSet=rs0&readPreference=primary&appname=MongoDB%20Compass&ssl=false",
+    "DatabaseName": "database",
+    "MongoClientSettings": null,
+    "GridFsSettings": {
+      "BucketName": "fs",
+      "BucketSize": 262144
+    }
+  }
+}
+```
+
+### Startup Project
+
+>*Put in method ConfigureServices.*
+
+```c#
+services.Configure<MongoDbSettings>(Configuration.GetSection("MongoDbSettings"));
+services.AddSingleton<IMongoDbSettings>(serviceProvider => serviceProvider.GetRequiredService<IOptions<MongoDbSettings>>().Value);
+
+services.AddSingleton<IMongoContext, MongoContext>();
 ```
