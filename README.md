@@ -1,13 +1,13 @@
-# Base Library
-
 ### Prerequires:
 - .NetCore 5.0.2
+- MongoDB
+- GridFs
 - Repository Pattern
 - UnitOfWork Pattern
 - Solid Principle 
     - open/closed
-- MongoDB
-- GridFs
+
+# Base Library
 
 This library consists of several sections, which are:
 
