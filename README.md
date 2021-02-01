@@ -8,13 +8,13 @@ This library consists of several sections, which are:
 
 ### BaseLibrary.Sql
 - [DbContext](#the-first-part-is-sqldbcontext)
-- [Repository](#the-second-part-is-repository)
-- [UnitOfWork](#the-third-part-is-unitofwork)
+- [Repository](#the-second-part-is-sqlrepository)
+- [UnitOfWork](#the-third-part-is-sqlunitofwork)
 
 ### BaseLibrary.Mongo
-- DbContext
-- Repository
-- UnitOfWork
+- [DbContext](#the-first-part-is-mongodbcontext)
+- [Repository](#the-second-part-is-mongorepository)
+- [UnitOfWork](#the-third-part-is-mongounitofwork)
 - GridFs
 
 ### BaseLibrary.Tool
@@ -268,7 +268,7 @@ services.AddDbContextPool<AppDbContext>(options =>
 );
 ```
 
-# The second part is Repository, 
+# The second part is SqlRepository, 
 
 in which the main and widely used methods are implemented, which are as follows.
 
@@ -930,7 +930,7 @@ public class GenreRepository : SqlRepository<Genre>, IGenreRepository
 }
 ```
 
-# The third part is UnitOfWork, 
+# The third part is SqlUnitOfWork, 
 in which the storage methods and how to access the Repositories are implemented.
 
 ### UnitOfWork Interface
@@ -1199,6 +1199,16 @@ public class MongoUnixSocketConnection : IMongoConnection
 ### MongoContext
 
 ```c#
+public interface IMongoContext : IDisposable
+{
+    IGridFSBucket Bucket { get; }
+    IClientSessionHandle Session { get; }
+
+    IMongoCollection<TDocument> GetCollection<TDocument>(string name = null);
+    Task AddCommand(Action func);
+    int SaveChanges();
+}
+    
 public class MongoContext : IMongoContext
 {
     private readonly IMongoDatabase _database;
@@ -1306,7 +1316,7 @@ services.AddSingleton<IMongoDbSettings>(serviceProvider => serviceProvider.GetRe
 services.AddSingleton<IMongoContext, MongoContext>();
 ```
 
-# The second part is Repository, 
+# The second part is MongoRepository, 
 
 in which the main and widely used methods are implemented, which are as follows.
 
@@ -1629,7 +1639,7 @@ public class ProductRepository : MongoRepository<Product>, IProductRepository
 }
 ```
 
-# The third part is UnitOfWork, 
+# The third part is MongoUnitOfWork, 
 in which the storage methods and how to access the Repositories are implemented.
 
 ### UnitOfWork Interface
