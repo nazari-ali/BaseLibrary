@@ -1612,3 +1612,210 @@ public class MongoRepository<TDocument> : IMongoRepository<TDocument>
     #endregion
 }
 ```
+
+# Sample
+
+```c#
+public interface IProductRepository : IMongoRepository<Product>
+{
+}
+
+public class ProductRepository : MongoRepository<Product>, IProductRepository
+{
+    public ProductRepository(IMongoContext mongoContext) : base(mongoContext)
+    {
+
+    }
+}
+```
+
+# The third part is UnitOfWork, 
+in which the storage methods and how to access the Repositories are implemented.
+
+### UnitOfWork Interface
+
+```c#
+public interface IMongoUnitOfWork : IDisposable
+{
+    IMongoRepository<TDocument> GetRepository<TDocument>()
+        where TDocument : class;
+
+    void SaveChanges();
+    bool SaveChangesTransaction();
+    Task<bool> SaveChangesTransactionAsync();
+}
+```
+
+### UnitOfWork Implementation
+
+```c#
+public class MongoUnitOfWork : IMongoUnitOfWork
+{
+    protected readonly IMongoContext MongoContext;
+    private readonly Dictionary<Type, object> _repositories;
+
+    public MongoUnitOfWork(IMongoContext mongoContext)
+    {
+        MongoContext = mongoContext;
+        _repositories = new Dictionary<Type, object>();
+    }
+
+    /// <summary>
+    /// SaveChanges
+    /// </summary>
+    /// <returns></returns>
+    public void SaveChanges()
+    {
+        MongoContext.SaveChanges();
+    }
+
+    /// <summary>
+    /// SaveChanges Transaction
+    /// for all command
+    /// </summary>
+    /// <returns></returns>
+    public bool SaveChangesTransaction()
+    {
+        bool returnValue = true;
+        MongoContext.Session.StartTransaction();
+
+        try
+        {
+            SaveChanges();
+            MongoContext.Session.CommitTransaction();
+        }
+        catch (Exception)
+        {
+            returnValue = false;
+            MongoContext.Session.AbortTransaction();
+        }
+
+        return returnValue;
+    }
+
+    /// <summary>
+    /// SaveChanges Transaction
+    /// for all command
+    /// </summary>
+    /// <returns></returns>
+    public async Task<bool> SaveChangesTransactionAsync()
+    {
+        bool returnValue = true;
+        MongoContext.Session.StartTransaction();
+
+        try
+        {
+            SaveChanges();
+            await MongoContext.Session.CommitTransactionAsync();
+        }
+        catch (Exception)
+        {
+            returnValue = false;
+            await MongoContext.Session.AbortTransactionAsync();
+        }
+
+        return returnValue;
+    }
+
+    /// <summary>
+    /// Create new repository for entities
+    /// </summary>
+    /// <typeparam name="TDocument"></typeparam>
+    /// <returns></returns>
+    public IMongoRepository<TDocument> GetRepository<TDocument>()
+        where TDocument : class
+    {
+        // Checks if the Dictionary Key contains the Model class
+        if (_repositories.Keys.Contains(typeof(TDocument)))
+        {
+            // Return the repository for that Model class
+            return _repositories[typeof(TDocument)] as IMongoRepository<TDocument>;
+        }
+
+        // If the repository for that Model class doesn't exist, create it
+        var repository = new MongoRepository<TDocument>(MongoContext);
+
+        // Add it to the dictionary
+        _repositories.Add(typeof(TDocument), repository);
+
+        return repository;
+    }
+
+    #region IDisposable Support  
+
+    // To detect redundant calls  
+    private bool _disposedValue = false;
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (_disposedValue) return;
+
+        if (disposing)
+        {
+            //dispose managed state (managed objects).  
+            MongoContext.Dispose();
+        }
+
+        // free unmanaged resources (unmanaged objects) and override a finalizer below.  
+        // set large fields to null.  
+
+        _disposedValue = true;
+    }
+
+    /// <summary>
+    /// override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.  
+    /// </summary>
+    ~MongoUnitOfWork()
+    {
+        // Do not change this code. Put cleanup code in Dispose(bool disposing) above.  
+        Dispose(false);
+    }
+
+    /// <summary>
+    /// This code added to correctly implement the disposable pattern.  
+    /// </summary>
+    public void Dispose()
+    {
+        // Do not change this code. Put cleanup code in Dispose(bool disposing) above.  
+        Dispose(true);
+
+        // uncomment the following line if the finalizer is overridden above.  
+        GC.SuppressFinalize(this);
+    }
+
+    #endregion
+}
+```
+
+# Sample
+
+```c#
+public interface IUnitOfWork : IMongoUnitOfWork
+{
+    ProductRepository Products { get; }
+    ISqlRepository<Lyric> Lyrics { get; }
+}
+
+public class UnitOfWork : MongoUnitOfWork, IUnitOfWork
+{
+    private readonly IMongoContext _mongoContext;
+
+    public UnitOfWork(IMongoContext mongoContext) : base(mongoContext)
+    {
+        _mongoContext = mongoContext;
+    }
+
+    private ProductRepository _productRepository;
+    public ProductRepository Products => _productRepository ??= new ProductRepository(_mongoContext);
+    
+    public IMongoRepository<Lyric> Lyrics => GetRepository<Lyric>();
+}
+```
+
+### Startup Project 
+
+>*Put in method ConfigureServices.*
+
+```c#
+services.AddTransient<IUnitOfWork, UnitOfWork>();
+```
