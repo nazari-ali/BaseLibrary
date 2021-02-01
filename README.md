@@ -1150,6 +1150,54 @@ The Mongo project consists of 4 parts,
 
 In Class MongoContext, access to the Mongo is implemented through both the tcp and socket. Access to the bucket for GridFs is also done in this section.
 
+To connect the Mongo, two modes, Tcp and Socket, are used, which uses the open and closed principle, and the two classes inherit from an interface and implement it, the codes of which are as follows:
+
+### Interface 
+
+```c#
+public interface IMongoConnection
+{
+    ConnectionType Type { get; }
+    IMongoClient GetMongoClient(IMongoDbSettings settings);
+}
+```
+
+### Implementation
+
+```c#
+public class MongoTcpConnection : IMongoConnection
+{
+    public ConnectionType Type => ConnectionType.Tcp;
+
+    public IMongoClient GetMongoClient(IMongoDbSettings settings)
+    {
+        return new MongoClient(settings.ConnectionString);
+    }
+}
+
+public class MongoUnixSocketConnection : IMongoConnection
+{
+    public ConnectionType Type => ConnectionType.UnixSocket;
+
+    public IMongoClient GetMongoClient(IMongoDbSettings settings)
+    {
+        var unixSocketPath = settings.ConnectionString.Split('@')[1].Split('/')[0];
+        settings.ConnectionString.Replace(unixSocketPath, WebUtility.UrlEncode(unixSocketPath));
+
+        var mongoUrl = MongoUrl.Create(settings.ConnectionString);
+
+        var socketSettings = MongoClientSettings.FromUrl(mongoUrl);
+        socketSettings.MaxConnectionPoolSize = 100000;
+        socketSettings.RetryReads = true;
+        socketSettings.RetryWrites = true;
+
+        return new MongoClient(socketSettings.WithUnixDomainSockets());
+    }
+}
+```
+
+### MongoContext
+
 ```c#
 public class MongoContext : IMongoContext
 {
@@ -1256,4 +1304,311 @@ services.Configure<MongoDbSettings>(Configuration.GetSection("MongoDbSettings"))
 services.AddSingleton<IMongoDbSettings>(serviceProvider => serviceProvider.GetRequiredService<IOptions<MongoDbSettings>>().Value);
 
 services.AddSingleton<IMongoContext, MongoContext>();
+```
+
+# The second part is Repository, 
+
+in which the main and widely used methods are implemented, which are as follows.
+
+### Repository Interface
+
+```c#
+public interface IMongoRepository<TDocument> : IMongoRepositorySynchronously<TDocument>, IMongoRepositoryAsynchronously<TDocument> where TDocument : class
+{
+    
+}
+
+public interface IMongoRepositorySynchronously<TDocument> 
+    where TDocument : class
+{
+    IQueryable<TDocument> AsQueryable();
+
+    IEnumerable<TDocument> FilterBy(
+        Expression<Func<TDocument, bool>> filterExpression
+    );
+
+    IEnumerable<TProjected> FilterBy<TProjected>(
+        Expression<Func<TDocument, bool>> filterExpression,
+        Expression<Func<TDocument, TProjected>> projectionExpression
+    );
+
+    TDocument FindOne(
+        Expression<Func<TDocument, bool>> filterExpression
+    );
+
+    TDocument FindById(
+        string objectId
+    );
+
+    void InsertOne(
+        TDocument document
+    );
+
+    void InsertMany(
+        ICollection<TDocument> documents
+    );
+
+    void ReplaceOne(
+        TDocument document
+    );
+
+    void DeleteOne(
+        Expression<Func<TDocument, bool>> filterExpression
+    );
+
+    void DeleteById(
+        string objectId
+    );
+
+    void DeleteMany(
+        Expression<Func<TDocument, bool>> filterExpression
+    );
+}
+
+public interface IMongoRepositoryAsynchronously<TDocument> 
+    where TDocument : class
+{
+    Task<TDocument> FindOneAsync(
+        Expression<Func<TDocument, bool>> filterExpression,
+        CancellationToken cancellationToken = default
+    );
+
+    Task<TDocument> FindByIdAsync(
+        string objectId,
+        CancellationToken cancellationToken = default
+    );
+
+    Task InsertOneAsync(
+        TDocument document,
+        CancellationToken cancellationToken = default
+    );
+
+    Task InsertManyAsync(
+        ICollection<TDocument> documents,
+        CancellationToken cancellationToken = default
+    );
+
+    Task ReplaceOneAsync(
+        TDocument document,
+        CancellationToken cancellationToken = default
+    );
+
+    Task DeleteOneAsync(
+        Expression<Func<TDocument, bool>> filterExpression,
+        CancellationToken cancellationToken = default
+    );
+
+    Task DeleteByIdAsync(
+        string objectId,
+        CancellationToken cancellationToken = default
+    );
+
+    Task DeleteManyAsync(
+        Expression<Func<TDocument, bool>> filterExpression,
+        CancellationToken cancellationToken = default
+    );
+}
+```
+
+### Repository Implementation
+
+```c#
+public class MongoRepository<TDocument> : IMongoRepository<TDocument>
+        where TDocument : class
+{
+    protected readonly IMongoCollection<TDocument> Collection;
+    private readonly IMongoContext _mongoContext;
+
+    public MongoRepository(IMongoContext mongoContext)
+    {
+        _mongoContext = mongoContext;
+        Collection = mongoContext.GetCollection<TDocument>();
+    }
+
+    #region IRepositorySynchronously
+
+    public virtual IQueryable<TDocument> AsQueryable()
+    {
+        return Collection.AsQueryable();
+    }
+
+    public virtual IEnumerable<TDocument> FilterBy(
+        Expression<Func<TDocument, bool>> filterExpression
+    )
+    {
+        return Collection.Find(filterExpression).ToEnumerable();
+    }
+
+    public virtual IEnumerable<TProjected> FilterBy<TProjected>(
+        Expression<Func<TDocument, bool>> filterExpression,
+        Expression<Func<TDocument, TProjected>> projectionExpression
+    )
+    {
+        return Collection.Find(filterExpression).Project(projectionExpression).ToEnumerable();
+    }
+
+    public virtual TDocument FindOne(
+        Expression<Func<TDocument, bool>> filterExpression
+    )
+    {
+        return Collection.Find(filterExpression).FirstOrDefault();
+    }
+
+    public virtual TDocument FindById(
+        string objectId
+    )
+    {
+        var filter = Builders<TDocument>.Filter.Eq("_id", objectId.ToObjectId());
+        return Collection.Find(filter).SingleOrDefault();
+    }
+
+    public virtual void InsertOne(
+        TDocument document
+    )
+    {
+        _mongoContext.AddCommand(() =>
+            Collection.InsertOne(_mongoContext.Session, document)
+        );
+    }
+
+    public void InsertMany(
+        ICollection<TDocument> documents
+    )
+    {
+        _mongoContext.AddCommand(() =>
+            Collection.InsertMany(_mongoContext.Session, documents)
+        );
+    }
+
+    public void ReplaceOne(
+        TDocument document
+    )
+    {
+        var filter = Builders<TDocument>.Filter.Eq("_id", document.GetId());
+
+        _mongoContext.AddCommand(() =>
+            Collection.FindOneAndReplace(_mongoContext.Session, filter, document)
+        );
+    }
+
+    public void DeleteOne(
+        Expression<Func<TDocument, bool>> filterExpression
+    )
+    {
+        _mongoContext.AddCommand(() =>
+            Collection.FindOneAndDelete(_mongoContext.Session, filterExpression)
+        );
+    }
+
+    public void DeleteById(
+        string objectId
+    )
+    {
+        var filter = Builders<TDocument>.Filter.Eq("_id", objectId.ToObjectId());
+
+        _mongoContext.AddCommand(() =>
+            Collection.FindOneAndDelete(_mongoContext.Session, filter)
+        );
+    }
+
+    public void DeleteMany(
+        Expression<Func<TDocument, bool>> filterExpression
+    )
+    {
+        _mongoContext.AddCommand(() =>
+            Collection.DeleteMany(_mongoContext.Session, filterExpression)
+        );;
+    }
+
+    #endregion
+
+    #region IRepositoryAsynchronously
+
+    public virtual Task<TDocument> FindOneAsync(
+        Expression<Func<TDocument, bool>> filterExpression,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return Task.Run(() => Collection.Find(filterExpression).FirstOrDefaultAsync(cancellationToken));
+    }
+
+    public virtual Task<TDocument> FindByIdAsync(
+        string objectId,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return Task.Run(() =>
+        {
+            var filter = Builders<TDocument>.Filter.Eq("_id", objectId.ToObjectId());
+
+            return Collection.Find(filter).SingleOrDefaultAsync(cancellationToken);
+        });
+    }
+
+    public virtual Task InsertOneAsync(
+        TDocument document,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return _mongoContext.AddCommand(() =>
+            Collection.InsertOneAsync(_mongoContext.Session, document, null, cancellationToken)
+        );
+    }
+
+    public virtual Task InsertManyAsync(
+        ICollection<TDocument> documents,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return _mongoContext.AddCommand(() =>
+            Collection.InsertManyAsync(_mongoContext.Session, documents, null, cancellationToken)
+        );
+    }
+
+    public virtual Task ReplaceOneAsync(
+        TDocument document,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var filter = Builders<TDocument>.Filter.Eq("_id", document.GetId());
+
+        return _mongoContext.AddCommand(() =>
+            Collection.FindOneAndReplaceAsync(_mongoContext.Session, filter, document, null, cancellationToken)
+        );
+    }
+
+    public Task DeleteOneAsync(
+        Expression<Func<TDocument, bool>> filterExpression,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return _mongoContext.AddCommand(() =>
+            Collection.FindOneAndDeleteAsync(_mongoContext.Session, filterExpression, null, cancellationToken)
+        );
+    }
+
+    public Task DeleteByIdAsync(
+        string objectId,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var filter = Builders<TDocument>.Filter.Eq("_id", objectId.ToObjectId());
+
+        return _mongoContext.AddCommand(() =>
+            Collection.FindOneAndDeleteAsync(_mongoContext.Session, filter, null, cancellationToken)
+        );
+    }
+
+    public Task DeleteManyAsync(
+        Expression<Func<TDocument, bool>> filterExpression,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return _mongoContext.AddCommand(() =>
+            Collection.DeleteManyAsync(_mongoContext.Session, filterExpression, null, cancellationToken)
+        );
+    }
+
+    #endregion
+}
 ```
