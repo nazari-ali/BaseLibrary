@@ -40,7 +40,6 @@ This library consists of several sections, which are:
 - Utilities
   - Download
   - File
-  - HttpClient
   - ServiceLocator
   - Utility
 
