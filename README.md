@@ -2,6 +2,10 @@
 
 ### Prerequires:
 - .NetCore 5.0.2
+- Repository Pattern
+- UnitOfWork Pattern
+- Solid Principle 
+    - open/closed
 - MongoDB
 - GridFs
 
