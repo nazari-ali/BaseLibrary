@@ -1,10 +1,11 @@
 # Base Library
-This library consists of several sections, which are:
 
 ### Prerequires:
 - .NetCore 5.0.2
 - MongoDB
 - GridFs
+
+This library consists of several sections, which are:
 
 ### BaseLibrary.Sql
 - [DbContext](#the-first-part-is-sqldbcontext)
@@ -15,7 +16,7 @@ This library consists of several sections, which are:
 - [DbContext](#the-first-part-is-mongodbcontext)
 - [Repository](#the-second-part-is-mongorepository)
 - [UnitOfWork](#the-third-part-is-mongounitofwork)
-- GridFs
+- [GridFs](#the-fourth-part-is-gridfs)
 
 ### BaseLibrary.Tool
 - Extension
@@ -1828,4 +1829,185 @@ public class UnitOfWork : MongoUnitOfWork, IUnitOfWork
 
 ```c#
 services.AddTransient<IUnitOfWork, UnitOfWork>();
+```
+
+# The fourth part is GridFs, 
+This section is used to work with files that are stored binarily in the collection of comments.
+
+### GridFs Interface
+
+```c#
+public interface IGridFsRepository
+{
+    GridFSFileInfo Get(ObjectId objectId);
+    Task<GridFSFileInfo> GetAsync(ObjectId objectId);
+    GridFSFileInfo Get(string fileName);
+    Task<GridFSFileInfo> GetAsync(string fileName);
+    bool Exist(ObjectId objectId);
+    Task<bool> ExistAsync(ObjectId objectId);
+    bool Exist(string fileName);
+    Task<bool> ExistAsync(string fileName);
+    BsonDocument GetMetadata(ObjectId objectId);
+    Task<BsonDocument> GetMetadataAsync(ObjectId objectId);
+    string GetMetadata(ObjectId objectId, string element);
+    Task<string> GetMetadataAsync(ObjectId objectId, string element);
+}
+```
+
+### GridFs Implementation
+
+```c#
+public class GridFsRepository : IGridFsRepository
+{
+    protected readonly IGridFSBucket Bucket;
+
+    public GridFsRepository(IMongoContext mongoContext)
+    {
+        Bucket = mongoContext.Bucket;
+    }
+
+    public GridFSFileInfo Get(ObjectId objectId)
+    {
+        var filter = Builders<GridFSFileInfo>.Filter.Eq("_id", objectId);
+        return Bucket.Find(filter).FirstOrDefault();
+    }
+
+    public async Task<GridFSFileInfo> GetAsync(ObjectId objectId)
+    {
+        var filter = Builders<GridFSFileInfo>.Filter.Eq("_id", objectId);
+        return await Bucket.FindAsync(filter).Result.FirstOrDefaultAsync();
+    }
+
+    public GridFSFileInfo Get(string fileName)
+    {
+        var filter = Builders<GridFSFileInfo>.Filter.Eq("filename", fileName);
+        return Bucket.Find(filter).FirstOrDefault();
+    }
+
+    public async Task<GridFSFileInfo> GetAsync(string fileName)
+    {
+        var filter = Builders<GridFSFileInfo>.Filter.Eq("filename", fileName);
+        return await Bucket.FindAsync(filter).Result.FirstOrDefaultAsync();
+    }
+
+    public bool Exist(ObjectId objectId)
+    {
+        var filter = Builders<GridFSFileInfo>.Filter.Eq("_id", objectId);
+        return Bucket.Find(filter).Any();
+    }
+
+    public Task<bool> ExistAsync(ObjectId objectId)
+    {
+        var filter = Builders<GridFSFileInfo>.Filter.Eq("_id", objectId);
+        return Bucket.FindAsync(filter).Result.AnyAsync();
+    }
+
+    public bool Exist(string fileName)
+    {
+        var filter = Builders<GridFSFileInfo>.Filter.Eq("filename", fileName);
+        return Bucket.Find(filter).Any();
+    }
+
+    public async Task<bool> ExistAsync(string fileName)
+    {
+        var filter = Builders<GridFSFileInfo>.Filter.Eq("filename", fileName);
+        return await Bucket.FindAsync(filter).Result.AnyAsync();
+    }
+
+    public BsonDocument GetMetadata(ObjectId objectId)
+    {
+        var info = Get(objectId);
+        return info?.Metadata;
+    }
+
+    public async Task<BsonDocument> GetMetadataAsync(ObjectId objectId)
+    {
+        var info = await GetAsync(objectId);
+        return info?.Metadata;
+    }
+
+    public string GetMetadata(ObjectId objectId, string element)
+    {
+        var info = Get(objectId);
+        return info?.Metadata[element].ToString();
+    }
+
+    public async Task<string> GetMetadataAsync(ObjectId objectId, string element)
+    {
+        var info = await GetAsync(objectId);
+        return info?.Metadata[element].ToString();
+    }
+}
+```
+
+# Sample
+
+### The following repository can be placed in the UnitOfWork and used in the required classes.
+
+```c#
+public class FileRepository : GridFsRepository, IFileRepository
+{
+    public FileRepository(IMongoContext mongoContext) : base(mongoContext)
+    {
+
+    }
+
+    public ObjectId Upload(IFormFile source)
+    {
+        var options = new GridFSUploadOptions
+        {
+            Metadata = new BsonDocument
+            {
+                { MetadataKeys.ContentType.ToDisplay(), source.ContentType }
+            }
+        };
+
+        return Bucket.UploadFromFile(source, options);
+    }
+
+    public Task<ObjectId> UploadAsync(IFormFile source)
+    {
+        var options = new GridFSUploadOptions
+        {
+            Metadata = new BsonDocument
+            {
+                { MetadataKeys.ContentType.ToDisplay(), source.ContentType }
+            }
+        };
+
+        return Bucket.UploadFromFileAsync(source, options);
+    }
+
+    public byte[] Download(ObjectId objectId)
+    {
+        var options = new GridFSDownloadOptions
+        {
+            Seekable = true,
+            CheckMD5 = true
+        };
+
+        return Bucket.DownloadAsBytes(objectId, options);
+    }
+
+    public Task<byte[]> DownloadAsync(ObjectId objectId)
+    {
+        var options = new GridFSDownloadOptions
+        {
+            Seekable = true,
+            CheckMD5 = true
+        };
+
+        return Bucket.DownloadAsBytesAsync(objectId, options);
+    }
+
+    public void Delete(ObjectId objectId)
+    {
+        Bucket.Delete(objectId);
+    }
+
+    public Task DeleteAsync(ObjectId objectId)
+    {
+        return Bucket.DeleteAsync(objectId);
+    }
+}
 ```
