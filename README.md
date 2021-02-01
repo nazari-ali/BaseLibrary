@@ -258,7 +258,7 @@ public class AppDbContext : SqlDbContext
 ```json
 {
   "ConnectionStrings": {
-    "SqlServer": "Data Source=.;Initial Catalog=Tanino;Integrated Security=true;App=EF807;"
+    "SqlServer": "Data Source=.;Initial Catalog=DatabaseName;Integrated Security=true;App=EF807;"
   }
 }
 ```
